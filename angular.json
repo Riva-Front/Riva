@@ -10,7 +10,21 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "css",
+          "type": "component"
+       
+         },
+        "@schematics/angular:service": {
+          "type": "service"
+        },
+          "@schematics/angular:pipe": {
+          "type": "pipe"
+        },
+            "@schematics/angular:directive": {
+          "type": "directive"
+        },
+            "@schematics/angular:module": {
+          "type": "module"
         }
       },
       "root": "",
@@ -22,7 +36,7 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
+            "inlineStyleLanguage": "css",
             "assets": [
               {
                 "glob": "**/*",
@@ -30,7 +44,8 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "src/styles.css"
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",
