@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { sign } from 'crypto';
@@ -21,3 +22,8 @@ export const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
+=======
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [];
+>>>>>>> 762c4c4769f95ce6c5c401bc650818b17f94d6d6

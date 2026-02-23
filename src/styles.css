@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Google Font */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -11,3 +12,13 @@
 body {
     font-family: 'Inter', sans-serif;
 }
+=======
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import "flowbite/src/themes/default";
+
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+>>>>>>> 762c4c4769f95ce6c5c401bc650818b17f94d6d6

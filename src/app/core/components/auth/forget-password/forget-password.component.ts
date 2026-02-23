@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
@@ -55,3 +56,16 @@ export class ForgetPasswordComponent {
     });
   }
 }
+=======
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-forget-password',
+  imports: [],
+  templateUrl: './forget-password.component.html',
+  styleUrl: './forget-password.component.css',
+})
+export class ForgetPasswordComponent {
+
+}
+>>>>>>> 762c4c4769f95ce6c5c401bc650818b17f94d6d6

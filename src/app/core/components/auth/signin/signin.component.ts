@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -83,3 +84,16 @@ export class SigninComponent {
     });
   }
 }
+=======
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-signin',
+  imports: [],
+  templateUrl: './signin.component.html',
+  styleUrl: './signin.component.css',
+})
+export class SigninComponent {
+
+}
+>>>>>>> 762c4c4769f95ce6c5c401bc650818b17f94d6d6

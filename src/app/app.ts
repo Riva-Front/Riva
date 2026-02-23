@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+<<<<<<< HEAD
 import { ForgetPasswordComponent } from './core/components/auth/forget-password/forget-password.component';
 import { NewPasswordComponent } from './core/components/auth/new-password/new-password.component';
 import { SignupComponent } from './core/components/auth/signup/signup.component';
@@ -23,3 +24,15 @@ import { SigninComponent } from './core/components/auth/signin/signin.component'
 export class App {
   protected readonly title = signal('project-riva');
 }
+=======
+
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet],
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
+})
+export class App {
+  protected readonly title = signal('project-riva');
+}
+>>>>>>> 762c4c4769f95ce6c5c401bc650818b17f94d6d6
