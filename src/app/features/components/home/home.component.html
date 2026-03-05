@@ -1,1 +1,434 @@
-<p>home works!</p>
+<section>
+
+    <div class="relative w-full min-h-125 flex items-center bg-white overflow-hidden font-sans pt-10">
+
+        <div class="absolute right-0 top-0 h-full w-full md:w-1/2 z-0 overflow-hidden">
+            <img src="image/home.jpeg" alt="DNA " class="animate-dna-float object-cover w-full h-full opacity-60 transition-all duration-1000">
+
+            <div class="absolute inset-0 bg-linear-to-r from-white via-white/20 to-transparent"></div>
+        </div>
+
+        <div class="container mx-auto px-6 md:px-12 z-10">
+            <div class="max-w-2xl">
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight">
+                    Riva Platform... <br />
+                    <span class="text-gray-900">Integrated Healthcare Anytime</span>
+                    <span class="text-sky-500 block mt-2">, Anywhere</span>
+                </h1>
+
+                <p class="mt-6 text-gray-600 text-lg leading-relaxed max-w-lg">
+                    Connect with top-tier specialists, track your health metrics, and manage appointments seamlessly through our secure ecosystem.
+                </p>
+            </div>
+            <div class="mt-10 flex gap-4">
+                <button class="px-8 py-3 bg-sky-500 text-white rounded-full shadow-lg hover:bg-sky-600 transition">Get Started</button>
+                <button class="px-8 py-3 border border-gray-200 rounded-full hover:bg-gray-50">Contact Us</button>
+
+                <div class="flex -space-x-3 items-center ml-4">
+                    <img class="w-10 h-10 rounded-full" src="image/avatar4.jpeg" alt="Rounded avatar">
+                    <img class="w-10 h-10 rounded-full" src="image/avatar2.jpeg" alt="Rounded avatar">
+                    <img class="w-10 h-10 rounded-full" src="image/avatar3.jpeg" alt="Rounded avatar">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        @keyframes dnaFloat {
+            0% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) rotate(3deg) scale(1.07);
+            }
+            100% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+        }
+        
+        .animate-dna-float {
+            animation: dnaFloat 9s ease-in-out infinite;
+        }
+    </style>
+
+    <!-- sec2 -->
+    <div class="relative font-sans  py-10 overflow-hidden">
+        <div class="flex whitespace-nowrap overflow-hidden">
+
+            <div class="flex animate-marquee gap-8 items-center">
+                <img src="image/slide1.jpeg" class="h-70 w-140 object-contain  transition" alt="Brand 1">
+                <img src="image/slide2.jpeg" class="h-70 w-140 object-contain  hover:grayscale-0 transition" alt="Brand 2">
+                <img src="image/slide3.jpeg" class="h-70 w-140 object-contain  hover:grayscale-0 transition" alt="Brand 3">
+                <img src="image/slide4.jpeg" class="h-70 w-140 object-contain  hover:grayscale-0 transition" alt="Brand 4">
+                <img src="image/slide5.jpeg" class="h-70 w-140 object-contain  hover:grayscale-0 transition" alt="Brand 4">
+                <img src="image/slide6.jpeg" class="h-70 w-140 object-contain  hover:grayscale-0 transition" alt="Brand 4">
+                <img src="image/slide7.jpeg" class="h-70 w-140 object-contain  hover:grayscale-0 transition" alt="Brand 4">
+                <img src="image/slide8.jpeg" class="h-70 w-140 object-contain  hover:grayscale-0 transition" alt="Brand 4">
+                <img src="image/slide9.jpeg" class="h-70 w-140 object-contain  hover:grayscale-0 transition" alt="Brand 4">
+                <img src="image/slide10.jpeg" class="h-70 w-140 object-contain  hover:grayscale-0 transition" alt="Brand 4">
+            </div>
+
+
+        </div>
+
+        <div class="absolute inset-y-0 left-0 w-20 bg-linear-to-r from-gray-50 to-transparent z-10"></div>
+        <div class="absolute inset-y-0 right-0 w-20 bg-linear-to-l from-gray-50 to-transparent z-10"></div>
+    </div>
+
+    <style>
+        /* animation */
+        
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+        
+        .animate-marquee {
+            animation: marquee 20s linear infinite;
+        }
+    </style>
+
+
+
+    <!-- sec3 -->
+    <div class="relative bg-white py-20 overflow-hidden font-sans">
+
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-sky-600">About Us</h2>
+        </div>
+
+        <div class="container mx-auto px-6 flex flex-col lg:flex-row items-center gap-12">
+
+            <div class="w-full lg:w-1/2 space-y-6 z-10">
+
+                <div class="flex items-center bg-sky-500 text-white p-4 rounded-2xl shadow-lg transform transition hover:scale-105 cursor-pointer">
+                    <div class="bg-white/20 p-2 rounded-xl mr-4">
+                        <img src="image/robot1.jpeg" alt="Robot" class="w-12 h-12">
+                    </div>
+                    <span class="text-xl font-semibold">Personalized care just for you.</span>
+                </div>
+
+                <div class="flex items-center bg-white text-gray-700 p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition cursor-pointer">
+                    <div class="bg-sky-50 p-2 rounded-xl mr-4">
+                        <img src="image/robot2.jpeg" alt="Robot" class="w-12 h-12">
+                    </div>
+                    <span class="text-xl font-medium">Simple technology... for great results.</span>
+                </div>
+
+                <div class="flex items-center bg-white text-gray-700 p-4 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition cursor-pointer">
+                    <div class="bg-sky-50 p-2 rounded-xl mr-4">
+                        <img src="image/robot3.jpeg" alt="Robot" class="w-12 h-12">
+                    </div>
+                    <span class="text-xl font-medium">Peace of mind for those you love.</span>
+                </div>
+
+            </div>
+
+            <div class="w-full lg:w-1/2 relative">
+
+                <img src="image/home.jpeg" class="absolute -top-20 -left-20 opacity-20 w-full z-0" alt="DNA Background">
+
+                <div class="relative z-10 space-y-8">
+                    <p class="text-gray-500 leading-relaxed text-sm lg:text-base italic">
+                        Riva Platform is digitalized healthcare solutions focus on health <br> Lorem ipsum dolor, sit amet consectetur adipisicing elit.<br> Odio fugit quo, dolore ea ipsa libero, ipsam recusandae corporis debitis,<br> excepturi maxime
+                        facilis voluptate? Asperiores adipisci deserunt quis debitis tenetur!
+
+                    </p>
+
+                    <div class="flex gap-4">
+                        <div class="w-1/2 rounded-3xl overflow-hidden shadow-xl">
+                            <img src="image/slide3.jpeg" alt="Care" class="w-full h-48 object-cover">
+                        </div>
+                        <div class="w-1/2 rounded-3xl overflow-hidden shadow-xl border-4 border-sky-100">
+                            <img src="image/slide6.jpeg" alt="Health" class="w-full h-48 object-cover">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--sec4  -->
+    <div class="bg-gray-50 py-16 px-6 font-sans">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+                Health Conditions We Support
+            </h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                Riva leverages advanced technology to provide insights and support for various medical conditions.
+            </p>
+        </div>
+
+        <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+            <div class="group relative bg-white rounded-3xl p-6 shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:-translate-y-3">
+                <div class="overflow-hidden rounded-2xl mb-6">
+                    <img src="image/New folder/WhatsApp Image 2026-02-09 at 11.29.57 PM.jpeg" alt="Heart" class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-2">
+                </div>
+
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Memory loss progressess</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Detailed reports and proactive insights for your cardiovascular health.</p>
+            </div>
+
+            <div class="group relative bg-white rounded-3xl p-6 shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:-translate-y-3">
+                <div class="overflow-hidden rounded-2xl mb-6">
+                    <img src="image/New folder/WhatsApp Image 2026-02-09 at 11.29.58 PM (1).jpeg" alt="DNA" class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110">
+                </div>
+
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Abnormal tissue spread</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Complex data simplified through our advanced AI engine.</p>
+            </div>
+
+            <div class="group relative bg-white rounded-3xl p-6 shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:-translate-y-3">
+                <div class="overflow-hidden rounded-2xl mb-6">
+                    <img src="image/New folder/WhatsApp Image 2026-02-09 at 11.30.20 PM.jpeg" alt="Dashboard" class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-2">
+                </div>
+
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Blood flow reduces</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Real-time data and alerts that keep you informed 24/7.</p>
+            </div>
+
+            <div class="group relative bg-white rounded-3xl p-6 shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:-translate-y-3">
+                <div class="overflow-hidden rounded-2xl mb-6">
+                    <img src="image/New folder/WhatsApp Image 2026-02-23 at 7.01.07 PM.jpeg" alt="Brain" class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110">
+                </div>
+
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Irregular heartbeat happens</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Monitoring and tracking tools for mental and cognitive wellness.</p>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="bg-blue-50/30 py-20 px-6 font-sans">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">What Our Families Say</h2>
+            <p class="text-gray-500 text-lg">Real stories from real people who trust us with their care</p>
+        </div>
+
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <div class="bg-white p-8 rounded-4xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow duration-300">
+                <div>
+                    <div class="flex text-yellow-400 mb-4">
+
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star "></i>
+                        <i class="fa-solid fa-star "></i>
+                        <i class="fa-solid fa-star "></i>
+                        <i class="fa-solid fa-star "></i>
+
+                    </div>
+                    <p class="text-gray-600 leading-relaxed mb-8">
+                        "The app is so intuitive. Scheduling appointments takes seconds, and the video quality is excellent."
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <img class="w-10 h-10 rounded-full" src="image/avatar3.jpeg" alt="Rounded avatar">
+                    <div>
+                        <h4 class="font-bold text-gray-900 leading-none">Robert Miller</h4>
+                        <span class="text-gray-400 text-sm italic">Patient</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-4xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow duration-300">
+                <div>
+                    <div class="flex text-yellow-400 mb-4">
+
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star "></i>
+                        <i class="fa-solid fa-star "></i>
+                        <i class="fa-solid fa-star "></i>
+                        <i class="fa-solid fa-star "></i>
+
+                    </div>
+                    <p class="text-gray-600 leading-relaxed mb-8">
+                        "The app is so intuitive. Scheduling appointments takes seconds, and the video quality is excellent."
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <img class="w-10 h-10 rounded-full" src="image/avatar2.jpeg" alt="Rounded avatar">
+                    <div>
+                        <h4 class="font-bold text-gray-900 leading-none">Alpart Milano</h4>
+                        <span class="text-gray-400 text-sm italic">Patient</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-4xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition-shadow duration-300">
+                <div>
+                    <div class="flex text-yellow-400 mb-4">
+
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star "></i>
+                        <i class="fa-solid fa-star "></i>
+                        <i class="fa-solid fa-star "></i>
+                        <i class="fa-solid fa-star "></i>
+
+                    </div>
+                    <p class="text-gray-600 leading-relaxed mb-8">
+                        "The app is so intuitive. Scheduling appointments takes seconds, and the video quality is excellent."
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <img class="w-10 h-10 rounded-full" src="image/avatar4.jpeg" alt="Rounded avatar">
+                    <div>
+                        <h4 class="font-bold text-gray-900 leading-none">Robert Miller</h4>
+                        <span class="text-gray-400 text-sm italic">Patient</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!-- ///////////////////////////////////////////////////////////// -->
+
+    <!-- <div class="py-12 bg-sky-600 text-white">
+  <div class="container mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+    <div>
+      <div class="text-4xl font-extrabold mb-2">500+</div>
+      <div class="text-sky-100 text-sm uppercase tracking-wider">Medical Articles</div>
+    </div>
+    <div>
+      <div class="text-4xl font-extrabold mb-2">20k+</div>
+      <div class="text-sky-100 text-sm uppercase tracking-wider">Active Patients</div>
+    </div>
+    <div>
+      <div class="text-4xl font-extrabold mb-2">100+</div>
+      <div class="text-sky-100 text-sm uppercase tracking-wider">Specialists</div>
+    </div>
+    <div>
+      <div class="text-4xl font-extrabold mb-2">24/7</div>
+      <div class="text-sky-100 text-sm uppercase tracking-wider">Support Available</div>
+    </div>
+  </div>
+</div> -->
+
+    <!-- ///////////////////////////////////////نصيحه اليوم/////////////////////////////////// -->
+
+
+
+
+    <div class="py-10">
+        <div class="container mx-auto px-6">
+            <div class="relative overflow-hidden bg-gradient-to-r from-sky-400 to-blue-600 rounded-[2.5rem] p-10 text-white flex flex-col md:flex-row items-center gap-8 shadow-2xl">
+
+                <div class="bg-white/20 p-6 rounded-full animate-pulse">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+                </div>
+
+                <div class="text-center md:text-left flex-1">
+                    <span class="bg-white/30 px-4 py-1 rounded-full text-xs font-bold uppercase mb-4 inline-block">Daily Tip</span>
+
+                    <h3 class="text-2xl md:text-3xl font-bold mb-2">
+                        {{ currentTip.title }}
+                    </h3>
+                    <p class="text-sky-50 opacity-90 text-lg">
+                        {{ currentTip.text }}
+                    </p>
+                </div>
+
+                <button (click)="nextTip()" class="bg-white text-sky-600 px-8 py-3 rounded-2xl font-bold hover:bg-sky-50 transition-all active:scale-95">
+        Read More
+      </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ///////////////////////////////الجدول الزمني لرحله العلاج///////////////////////////////// -->
+
+    <div class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">How it Works</h2>
+            <div class="flex flex-col md:flex-row gap-8 justify-between">
+                <div class="flex-1 text-center relative">
+                    <div class="w-16 h-16 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 border-4 border-white shadow-lg">1</div>
+                    <h3 class="font-bold text-lg mb-2">Find Your Case</h3>
+                    <p class="text-gray-500 text-sm">Search for your chronic condition in our library.</p>
+                </div>
+                <div class="flex-1 text-center relative">
+                    <div class="w-16 h-16 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 border-4 border-white shadow-lg">2</div>
+                    <h3 class="font-bold text-lg mb-2">Daily Tracking</h3>
+                    <p class="text-gray-500 text-sm">Log your metrics like sugar level or blood pressure.</p>
+                </div>
+                <div class="flex-1 text-center relative">
+                    <div class="w-16 h-16 bg-sky-500 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 border-4 border-sky-100 shadow-lg animate-bounce">3</div>
+                    <h3 class="font-bold text-lg mb-2">Get Insights</h3>
+                    <p class="text-gray-500 text-sm">Receive AI-powered reports about your health.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- /////////////////////////////////////الاسيئله الشائعه///////////////////////////////////// -->
+
+    <div class="py-16 bg-gray-50">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-10">Common Questions</h2>
+            <div class="space-y-4">
+                <details class="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm" open>
+                    <summary class="flex justify-between items-center font-bold text-gray-800 cursor-pointer list-none">
+                        How do I track my blood sugar?
+                        <i class="fa-solid fa-circle-down"></i>
+                    </summary>
+                    <p class="text-gray-600 mt-4 leading-relaxed">
+                        You can use our dashboard to log your readings manually or sync with supported smart devices for real-time updates.
+                    </p>
+                </details>
+
+                <details class="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                    <summary class="flex justify-between items-center font-bold text-gray-800 cursor-pointer list-none">
+                        Is my medical data secure?
+                        <i class="fa-solid fa-circle-down"></i>
+                    </summary>
+                    <p class="text-gray-600 mt-4">
+                        Yes, we use end-to-end encryption to ensure your health records are only visible to you and your doctor.
+                    </p>
+                </details>
+                <details class="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                    <summary class="flex justify-between items-center font-bold text-gray-800 cursor-pointer list-none">
+                        What are the early symptoms of Alzheimer’s?
+                        <i class="fa-solid fa-circle-down"></i>
+                    </summary>
+                    <p class="text-gray-600 mt-4">
+                        Early symptoms include memory loss, difficulty finding words, confusion about time or place, and problems with daily tasks.
+                    </p>
+                </details>
+                <details class="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                    <summary class="flex justify-between items-center font-bold text-gray-800 cursor-pointer list-none">
+                        How can I reduce my risk of heart disease
+                        <i class="fa-solid fa-circle-down"></i>
+                    </summary>
+                    <p class="text-gray-600 mt-4">
+                        You can reduce your risk by eating a balanced diet, exercising regularly, avoiding smoking, managing stress, and checking your blood pressure and cholesterol levels.
+                    </p>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- ////////////////////////////////////////////////// -->
+
+
+
+
+
+
+</section>

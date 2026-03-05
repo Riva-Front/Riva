@@ -1,18 +1,64 @@
 /* eslint-disable @angular-eslint/prefer-inject */
-import {  Injectable } from "@angular/core";
-import {  CanActivate, Router } from '@angular/router';
+
+// =======================================================
+// 🟣 بنستورد Injectable علشان نخلي الكلاس Service
+// CanActivate علشان نستخدمه كـ Route Guard
+// Router علشان نعمل Redirect لو المستخدم مش مسجل دخول
+// AuthService علشان نعرف هل المستخدم عامل Login ولا لأ
+// =======================================================
+
+import { Injectable } from "@angular/core";
+import { CanActivate, Router } from '@angular/router';
 import { AuthService } from "../service/auth.service";
+
+// =======================================================
+// 🟣 providedIn: 'root'
+// يعني السيرفيس دي Global ومتاحة في المشروع كله
+// Angular بيعمل منها نسخة واحدة بس
+// =======================================================
+
 @Injectable({ providedIn: 'root' })
+
+// =======================================================
+// 🟣 AuthGuard بيطبق CanActivate
+// يعني قبل ما أي صفحة تفتح يسأل:
+// هل ينفع المستخدم يدخل الصفحة دي؟
+// =======================================================
+
 export class AuthGuard implements CanActivate {
+
+  // =====================================================
+  // 🟣 Constructor
+  // بنعمل Injection لـ:
+  // auth → علشان نستخدم isAuthenticated()
+  // router → علشان نعمل تحويل لصفحة login لو مش مسجل
+  // =====================================================
   constructor(private auth: AuthService, private router: Router) {}
 
+  // =====================================================
+  // 🟣 canActivate()
+  // دي بتتنفذ تلقائيًا قبل فتح أي Route
+  // لازم ترجع true أو false
+  // =====================================================
   canActivate(): boolean {
+
+    // لو المستخدم عنده Token ومحفوظ في LocalStorage
     if (this.auth.isAuthenticated()) {
-      return true; // المستخدم مسجل الدخول، يسمح له بالدخول
+
+      // نسمح له يدخل الصفحة
+      return true;
+
     } else {
-      console.log('Redirecting to login'); // طباعة رسالة في الكونسول
-      this.router.navigate(['/login']);   // إعادة التوجيه لصفحة تسجيل الدخول
-      return false; // منع الوصول للصفحة المطلوبة
+
+      // لو مش مسجل دخول
+      // نطبع رسالة في الكونسول للتأكد أثناء التطوير
+      console.log('Redirecting to login');
+
+      // نحوله لصفحة تسجيل الدخول
+      this.router.navigate(['/login']);
+
+      // نمنع فتح الصفحة المطلوبة
+      return false;
     }
   }
 }

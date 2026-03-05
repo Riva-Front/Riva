@@ -1,1 +1,27 @@
-<p>welcome1 works!</p>
+<div class="page overflow-hidden">
+
+    <div class="logo">
+        <img src="Picture1.png" class="logo-img" />
+    </div>
+
+    <div class="content flex flex-col items-center justify-center">
+
+        <!-- Robot -->
+        <spline-viewer url="https://prod.spline.design/RfqAjOnSviCEEX3U/scene.splinecode" class="w-[300px] md:w-[400px] h-[300px] md:h-[400px]">
+        </spline-viewer>
+
+        <!-- Message -->
+        <div class="message-box mt-6">
+            <p>
+                Welcome to Safia Care! Let's get you registered in just a few steps
+            </p>
+        </div>
+
+        <!-- Button -->
+        <button (click)="goToNextPage()" class="btn mt-6" routerLink="/signin">
+            Login
+        </button>
+
+    </div>
+
+</div>

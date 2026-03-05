@@ -1,103 +1,102 @@
 {
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1,
-  "cli": {
-<<<<<<< HEAD
-    "packageManager": "npm",
-    "analytics": "a97a4a28-0411-4a06-8e4f-57bbe9188f57"
-=======
-    "packageManager": "npm"
->>>>>>> 762c4c4769f95ce6c5c401bc650818b17f94d6d6
-  },
-  "newProjectRoot": "projects",
-  "projects": {
-    "project-riva": {
-      "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "css",
-          "type": "component"
-       
-         },
-        "@schematics/angular:service": {
-          "type": "service"
-        },
-          "@schematics/angular:pipe": {
-          "type": "pipe"
-        },
-            "@schematics/angular:directive": {
-          "type": "directive"
-        },
-            "@schematics/angular:module": {
-          "type": "module"
-        }
-      },
-      "root": "",
-      "sourceRoot": "src",
-      "prefix": "app",
-      "architect": {
-        "build": {
-          "builder": "@angular/build:application",
-          "options": {
-            "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "css",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
-            "styles": [
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "src/styles.css"
-            ],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
-              "entry": "src/server.ts"
-            }
-          },
-          "configurations": {
-            "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "cli": {
+        "defaultCollection": "@angular/schematics",
+        "analytics": false
+    },
+    "newProjectRoot": "projects",
+    "projects": {
+        "project-riva": {
+            "projectType": "application",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "css",
+                    "type": "component"
+
                 },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                "assets": [{
+                        "glob": "**/*",
+                        "input": "public"
+                    },
+                    "src/assets"
+                ],
+                "@schematics/angular:service": {
+                    "type": "service"
+                },
+                "@schematics/angular:pipe": {
+                    "type": "pipe"
+                },
+                "@schematics/angular:directive": {
+                    "type": "directive"
+                },
+                "@schematics/angular:module": {
+                    "type": "module"
                 }
-              ],
-              "outputHashing": "all"
             },
-            "development": {
-              "optimization": false,
-              "extractLicenses": false,
-              "sourceMap": true
+            "root": "",
+            "sourceRoot": "src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "browser": "src/main.ts",
+                        "tsConfig": "tsconfig.app.json",
+                        "inlineStyleLanguage": "css",
+                        "assets": [{
+                            "glob": "**/*",
+                            "input": "public"
+                        }],
+                        "styles": [
+                            "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+                            "src/styles.css"
+                        ],
+                        "server": "src/main.server.ts",
+                        "outputMode": "server",
+                        "ssr": {
+                            "entry": "src/server.ts"
+                        }
+                    },
+                    "configurations": {
+                        "production": {
+                            "budgets": [{
+                                    "type": "initial",
+                                    "maximumWarning": "500kB",
+                                    "maximumError": "1MB"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "4kB",
+                                    "maximumError": "8kB"
+                                }
+                            ],
+                            "outputHashing": "all"
+                        },
+                        "development": {
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "serve": {
+                    "builder": "@angular/build:dev-server",
+                    "configurations": {
+                        "production": {
+                            "buildTarget": "project-riva:build:production"
+                        },
+                        "development": {
+                            "buildTarget": "project-riva:build:development"
+                        }
+                    },
+                    "defaultConfiguration": "development"
+                },
+                "test": {
+                    "builder": "@angular/build:unit-test"
+                }
             }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve": {
-          "builder": "@angular/build:dev-server",
-          "configurations": {
-            "production": {
-              "buildTarget": "project-riva:build:production"
-            },
-            "development": {
-              "buildTarget": "project-riva:build:development"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "test": {
-          "builder": "@angular/build:unit-test"
         }
-      }
     }
-  }
 }

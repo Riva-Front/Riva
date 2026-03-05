@@ -20,38 +20,6 @@ export class ForgetPasswordComponent {
   constructor(private fb: FormBuilder,
               private authService: AuthService) {}
 
-  ngOnInit() {
-    this.form = this.fb.group({
-      email: ['']
-    });
-  }
+  ngOnInit() {}
 
-  sendCode() {
-
-    if (this.form.invalid) {
-      this.message = "Please enter your email";
-      return;
-    }
-
-    this.loading = true;
-    const email = this.form.value.email;
-
-    this.authService['sendCode'](email).subscribe({
-
-      next: () => {
-
-        this.message = "✅ Code sent successfully to your email";
-        this.loading = false;
-
-      },
-
-      error: () => {
-
-        this.message = "❌ Email not found";
-        this.loading = false;
-
-      }
-
-    });
-  }
 }
