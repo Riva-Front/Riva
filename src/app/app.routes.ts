@@ -12,13 +12,13 @@ import { AddNewMedicationComponent } from './core/components/auth/add-new-medica
 import { DoctorCardsComponent } from './core/components/auth/doctor-cards/doctor-cards.component';
 
 export const routes: Routes = [
+  { path: 'home', component: HomeComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'signin', component: SigninComponent },
   { path: 'forget-password', component: ForgetPasswordComponent },
   { path: 'new-password', component: NewPasswordComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'profile-account', component: ProfileAccountComponent },
-  { path: 'home', component: HomeComponent },
   { path: 'welcome1', component: Welcome1Component },
   { path: 'dashboard-p', component: DashboardPComponent },
   { path: 'add-new-medication', component: AddNewMedicationComponent },

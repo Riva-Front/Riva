@@ -47,12 +47,12 @@ export class App implements OnInit {
       });
 
     // AUTO LOGIN
-    const token = this.auth.getToken();
-    if (token) {
-      // this.router.navigate(['/dashboard-p']);
-    } else {
-      this.router.navigate(['/signin']);
-    }
+    // const token = this.auth.getToken();
+    // if (token) {
+    //   this.router.navigate(['/dashboard-p']);
+    // } else {
+    //   this.router.navigate(['/signin']);
+    // }
   }
 
   // Hide navbar/footer on auth pages
