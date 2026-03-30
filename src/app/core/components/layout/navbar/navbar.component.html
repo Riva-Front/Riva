@@ -1,0 +1,42 @@
+<nav class="bg-gray-100 fixed w-full z-20 top-0 inset-s-0 border-b border-default">
+    <div class="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <a [routerLink]="['home']" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <img src="/Picture1.png" class="h-15" alt="Flowbite Logo">
+
+        </a>
+        <div class="flex gap-4 md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+            <button class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-heading rounded-base group bg-linear-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800 ">
+<span class=" relative px-4 py-2.5 transition-all ease-in duration-75 text-black bg-neutral-primary-soft rounded-base group-hover:bg-transparent group-hover:dark:bg-transparent leading-5">
+<a href="/signin">Log in</a>
+</span>
+</button>
+
+            <button type="button" class="text-white bg-linear-to-r from-cyan-500 to-blue-500 hover:bg-linear-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-base text-sm px-4 py-2.5 text-center leading-5"><a href="/signup">Create Account</a> </button>
+
+            <button data-collapse-toggle="navbar-sticky" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-body rounded-base md:hidden hover:bg-neutral-secondary-soft hover:text-heading focus:outline-none focus:ring-2 focus:ring-neutral-tertiary"
+                aria-controls="navbar-sticky" aria-expanded="false">
+            <span class="sr-only">Open main menu</span>
+            <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h14"/></svg>
+        </button>
+        </div>
+        <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
+            <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border  bg-grey-100 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 ">
+                <li>
+                    <a [routerLink]="['home']" routerLinkActive=" text-sky-500" class="block py-2 px-3 text-sky-500 rounded-sm md:bg-transparent  md:p-0" aria-current="page">Home</a>
+                </li>
+                <li>
+                    <a [routerLink]="['about']" routerLinkActive=" text-sky-500" class="block py-2 px-3 text-sky-500 rounded-sm md:bg-transparent md:p-0" aria-current="page">About</a>
+                </li>
+                <li>
+                    <a [routerLink]="['features']" routerLinkActive=" text-sky-500" class="block py-2 text-sky-500 px-3rounded-sm md:bg-transparent md:p-0" aria-current="page">Feature</a>
+                </li>
+                <li>
+                    <a [routerLink]="['reviews']" routerLinkActive=" text-sky-500" class="block py-2 px-3 text-sky-500 rounded-sm md:bg-transparent  md:p-0" aria-current="page">Reviews</a>
+                </li>
+                <li>
+                    <a [routerLink]="['contact']" routerLinkActive=" text-sky-500" class="block py-2 px-3 text-sky-500 rounded-sm md:bg-transparent  md:p-0" aria-current="page">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

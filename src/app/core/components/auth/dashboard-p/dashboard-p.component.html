@@ -1,0 +1,199 @@
+<div class="min-h-screen bg-slate-100 p-4 md:p-8 md:pl-28 pb-24 md:pb-8 font-sans">
+
+    <aside class="fixed left-0 top-0 h-screen w-20 bg-white border-r border-gray-200 hidden md:flex flex-col items-center py-6 gap-8 shadow-sm z-50">
+        <div class="text-blue-600 font-bold text-xl">
+            <img src="/Picture1.png" routerLink="/dashboard-p" alt="RIVA Logo" class="w-12">
+        </div>
+        <div class="flex flex-col gap-6 text-gray-400">
+            <button class="p-2 bg-blue-50 text-blue-600 rounded-lg" routerLink="/dashboard-p"><i class="fas fa-home"></i></button>
+            <button class="p-2 hover:text-blue-600" routerLink="/add-new-medication"><i class="fas fa-pills"></i></button>
+            <button class="p-2 hover:text-blue-600"><i class="fas fa-user"></i></button>
+            <button class="p-2 hover:text-blue-600"><i class="fas fa-phone"></i></button>
+            <button class="p-2 hover:text-blue-600" routerLink="/doctor-cards"><i class="fa-solid fa-user-doctor"></i></button>
+            <button class="p-2 hover:text-blue-600" routerLink="/doctor-cards"><i class="fa-solid fa-user-doctor"></i></button>
+
+        </div>
+        <div class="mt-auto">
+            <button class="p-2 text-gray-400 hover:text-gray-600"><i class="fas fa-cog"></i></button>
+        </div>
+    </aside>
+
+    <nav class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-gray-100 flex justify-around items-center py-3 px-2 z-50 md:hidden shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+        <button class="flex flex-col items-center gap-1 text-blue-600" routerLink="/dashboard-p">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-[10px] font-bold">Home</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 text-gray-400" routerLink="/add-new-medication">
+            <i class="fas fa-pills text-lg"></i>
+            <span class="text-[10px] font-bold">Meds</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 text-gray-400" routerLink="/doctor-cards">
+            <i class="fa-solid fa-user-doctor text-lg"></i>
+            <span class="text-[10px] font-bold">Doctors</span>
+        </button>
+        <button class="flex flex-col items-center gap-1 text-gray-400">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-[10px] font-bold">Profile</span>
+        </button>
+    </nav>
+
+    <div class="flex flex-col md:grid md:grid-cols-12 gap-6 md:gap-8 max-w-[1600px] mx-auto">
+
+        <div class="order-1 md:order-2 md:col-span-4 space-y-6 md:space-y-8">
+            <div class="bg-blue-50 rounded-[30px] md:rounded-[40px] h-[250px] md:h-[320px] relative overflow-hidden shadow-sm border border-blue-100">
+                <div class="absolute top-4 left-4 bg-white/80 backdrop-blur-sm p-3 rounded-xl shadow-sm z-10">
+                    <p class="text-blue-600 font-bold text-sm">Hey! I'm Riva 👋</p>
+                </div>
+                <spline-viewer url="https://prod.spline.design/RfqAjOnSviCEEX3U/scene.splinecode" class="w-full h-full"></spline-viewer>
+            </div>
+
+            <div class="bg-white p-6 md:p-10 rounded-[30px] md:rounded-[40px] shadow-sm space-y-6 md:space-y-8 border border-white">
+                <h3 class="text-xl md:text-2xl font-black text-slate-800">How are you Feeling?</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-slate-700 text-sm md:text-base">Pain Level</span>
+                        <span [ngClass]="painLevel > 7 ? 'text-red-500 bg-red-50' : 'text-blue-600 bg-blue-50'" class="px-3 py-1 rounded-full text-xs font-bold transition-all">{{ painLevel }}</span>
+                    </div>
+                    <input type="range" min="1" max="10" [(ngModel)]="painLevel" (input)="updateMoodFromSlider()" class="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                </div>
+                <div class="flex justify-between items-center px-1">
+                    <button *ngFor="let m of moods" (click)="selectMood(m)" class="text-3xl md:text-4xl transition-all focus:outline-none" [ngClass]="selectedMood === m.id ? 'scale-125 md:scale-150 grayscale-0' : 'grayscale opacity-40 scale-90 md:scale-100'">{{ m.emoji }}</button>
+                </div>
+                <textarea [(ngModel)]="notes" class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-sm md:text-base focus:ring-2 focus:ring-blue-100 outline-none transition-all" rows="3" placeholder="Symptoms..."></textarea>
+                <button (click)="submitCheckIn()" class="w-full bg-slate-900 hover:bg-black text-white py-3 md:py-4 rounded-2xl font-bold transition-all active:scale-95 shadow-lg shadow-slate-200">Submit Check-in</button>
+            </div>
+        </div>
+
+        <div class="order-2 md:order-1 md:col-span-8 space-y-6 md:space-y-8">
+
+            <div class="relative bg-gradient-to-br from-white to-blue-50 rounded-[30px] md:rounded-[40px] p-6 md:p-12 shadow-sm min-h-[500px] md:h-[600px] border border-white flex flex-col justify-center overflow-visible">
+
+                <div class="relative z-10 w-full md:w-[400px]">
+                    <span class="text-blue-500 text-xs uppercase font-black tracking-widest bg-blue-50 px-3 py-1 rounded-full">System Active</span>
+                    <h1 class="text-4xl md:text-6xl font-black text-slate-800 mt-4 leading-tight">Disease <br> Analysis</h1>
+                    <p class="text-gray-500 mt-4 text-sm md:text-base leading-relaxed">Monitoring chronic conditions and scanning for early oncological markers across the body systems.</p>
+                </div>
+
+                <div class="absolute right-0 bottom-0 h-full w-full md:w-auto flex justify-end z-20">
+                    <div class="relative h-full aspect-[2/3] flex items-end">
+                        <img src="/human.png" class="h-[90%] object-contain opacity-40 md:opacity-100 ml-auto transition-opacity">
+
+                        <div class="absolute top-[27%] left-[45%] group pointer-events-auto">
+                            <div class="relative flex h-5 w-5 cursor-pointer">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-5 w-5 bg-orange-500 border-2 border-white shadow-lg"></span>
+                            </div>
+                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 p-5 bg-white/95 backdrop-blur-xl rounded-[2rem] shadow-2xl border border-orange-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[100]">
+                                <h4 class="font-black text-orange-600 text-xs mb-2 uppercase tracking-tighter italic">Hypertension (Silent Killer)</h4>
+                                <p class="text-[11px] text-slate-600 leading-relaxed font-bold">Chronically high blood pressure causes arterial wall thickening. Maintain levels below 120/80 mmHg.</p>
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-[10px] border-transparent border-t-white"></div>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-[40%] left-[50%] group pointer-events-auto">
+                            <div class="relative flex h-6 w-6 cursor-pointer">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-6 w-6 bg-red-600 border-2 border-white shadow-lg"></span>
+                            </div>
+                            <div class="absolute right-full mr-4 top-0 w-72 p-5 bg-white/95 backdrop-blur-xl rounded-[2rem] shadow-2xl border border-red-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[100]">
+                                <h4 class="font-black text-red-600 text-xs mb-2 uppercase tracking-tighter italic">Cardiovascular Health</h4>
+                                <p class="text-[11px] text-slate-600 leading-relaxed font-bold">Monitoring coronary artery efficiency and rhythm. Watch for Angina and irregular tachycardia.</p>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-[28%] left-[58%] group pointer-events-auto">
+                            <div class="relative flex h-5 w-5 cursor-pointer">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-800 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-5 w-5 bg-black border-2 border-white shadow-lg"></span>
+                            </div>
+                            <div class="absolute bottom-full right-0 mb-4 w-72 p-5 bg-white shadow-2xl rounded-[2rem] border-r-4 border-black opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[100]">
+                                <h4 class="font-black text-black text-xs mb-2 uppercase italic">Lung Carcinoma</h4>
+                                <p class="text-[11px] text-slate-600 leading-relaxed font-bold">Scanning for small cell growths. Early symptoms include persistent cough and hemoptysis.</p>
+                                <div class="absolute top-full right-6 border-[10px] border-transparent border-t-white"></div>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-[48%] left-[52%] group pointer-events-auto">
+                            <div class="relative flex h-5 w-5 cursor-pointer">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-5 w-5 bg-blue-600 border-2 border-white shadow-lg"></span>
+                            </div>
+                            <div class="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-72 p-5 bg-white/95 backdrop-blur-xl rounded-[2rem] shadow-2xl border border-blue-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[100]">
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 border-[10px] border-transparent border-b-white"></div>
+                                <h4 class="font-black text-blue-600 text-xs mb-2 uppercase italic">Diabetes Mellitus</h4>
+                                <p class="text-[11px] text-slate-600 leading-relaxed font-bold">Pancreatic dysfunction leads to chronic hyperglycemia damaging micro-vessels in eyes and kidneys.</p>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-[60%] left-[45%] group pointer-events-auto">
+                            <div class="relative flex h-5 w-5 cursor-pointer">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-800 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-5 w-5 bg-black border-2 border-white shadow-lg"></span>
+                            </div>
+                            <div class="absolute top-full right-0 mt-4 w-72 p-5 bg-white shadow-2xl rounded-[2rem] border-r-4 border-black opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[100]">
+                                <div class="absolute bottom-full right-6 border-[10px] border-transparent border-b-white"></div>
+                                <h4 class="font-black text-black text-xs mb-2 uppercase italic">Colorectal Cancer</h4>
+                                <p class="text-[11px] text-slate-600 leading-relaxed font-bold">Detection of malignant polyps. Screenings like colonoscopy are critical for early removal.</p>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-[44%] left-[38%] group pointer-events-auto">
+                            <div class="relative flex h-5 w-5 cursor-pointer">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-800 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-5 w-5 bg-black border-2 border-white shadow-lg"></span>
+                            </div>
+                            <div class="absolute left-full ml-4 top-0 w-72 p-5 bg-white shadow-2xl rounded-[2rem] border-l-4 border-black opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[100]">
+                                <h4 class="font-black text-black text-xs mb-2 uppercase italic">Liver Hepatoma</h4>
+                                <p class="text-[11px] text-slate-600 leading-relaxed font-bold">Often resulting from chronic cirrhosis. Affects detoxification and protein synthesis functions.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-8">
+                <div class="bg-white p-6 md:p-8 rounded-[30px] md:rounded-[40px] shadow-sm border border-white">
+                    <h3 class="font-bold text-lg md:text-xl mb-6">Today's Medication</h3>
+                    <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-3xl mb-6 border border-slate-100">
+                        <div class="bg-blue-100 p-3 md:p-4 rounded-2xl text-blue-600"><i class="fas fa-capsules text-xl md:text-2xl"></i></div>
+                        <div>
+                            <p class="font-bold text-slate-800 text-base md:text-lg">Donepezil</p>
+                            <p class="text-gray-400 text-sm">10mg / 1 Pill</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 md:gap-4">
+                        <button (click)="onTakeMedication()" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 md:py-4 rounded-2xl font-bold text-sm md:text-base shadow-lg shadow-green-100 transition-all active:scale-95">✔ Took it</button>
+                        <button (click)="remindLater()" class="flex-1 bg-amber-400 hover:bg-amber-500 text-white py-3 md:py-4 rounded-2xl font-bold text-sm md:text-base shadow-lg shadow-amber-100 transition-all active:scale-95">Remind Later</button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 md:p-8 rounded-[30px] md:rounded-[40px] shadow-sm flex flex-col items-center border border-white">
+                    <h3 class="font-bold text-lg md:text-xl self-start mb-4">Medication Scheduler</h3>
+                    <div class="relative w-40 h-40 md:w-48 md:h-48 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="50%" cy="50%" r="35%" stroke="currentColor" stroke-width="8" fill="transparent" class="text-slate-100" />
+                            <circle cx="50%" cy="50%" r="35%" stroke="currentColor" stroke-width="10" fill="transparent"
+                                [style.stroke-dasharray]="'calc(2 * 3.14159 * 35%)'"
+                                [style.stroke-dashoffset]="'calc(2 * 3.14159 * 35% * (1 - ' + adherence / 100 + '))'"
+                                stroke-linecap="round" class="text-blue-500 transition-all duration-1000" />
+                        </svg>
+                        <div class="absolute text-center">
+                            <span class="text-3xl md:text-4xl font-black text-blue-600">{{ adherence }}%</span>
+                            <p class="text-[8px] md:text-[10px] text-gray-400 uppercase font-bold">Adherence</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-6 overflow-x-auto w-full justify-center pb-2 scrollbar-hide">
+                        <div *ngFor="let d of week" (click)="toggleDay(d)" class="text-center cursor-pointer flex-shrink-0 group">
+                            <div class="w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center mb-1 transition-all" [ngClass]="d.taken ? 'bg-blue-500 text-white shadow-md' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'">
+                                <span class="text-xs font-bold">{{ d.day }}</span>
+                            </div>
+                            <div class="h-1 w-1 mx-auto rounded-full transition-all" [ngClass]="d.taken ? 'bg-blue-500' : 'bg-transparent'"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

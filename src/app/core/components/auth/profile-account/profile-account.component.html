@@ -1,0 +1,147 @@
+<!-- Main Layout -->
+<div class="min-h-screen w-full bg-[#F8F9FB] font-sans flex overflow-hidden">
+
+    <!-- Left Section (Visual / Branding Area - Desktop Only) -->
+    <div class="hidden md:flex w-1/2 relative overflow-hidden bg-gradient-to-br from-[#E6F0FF] to-[#D1E4FF]">
+
+        <!-- Logo -->
+        <div class="absolute top-10 left-10 flex flex-col items-center z-30">
+            <img src="/Picture1.png" class="w-24 h-24 object-contain" alt="RIVA Logo">
+
+        </div>
+
+        <!-- Floating Icon -->
+        <div class="absolute top-1/4 right-20 bg-white/70 backdrop-blur-md p-3 rounded-2xl shadow-sm z-20">
+            <i class="fa-solid fa-user-doctor text-green-500 text-xl"></i>
+        </div>
+
+        <!-- 3D Section -->
+        <div class="relative z-10 flex flex-col items-center justify-center w-full h-full pt-20">
+
+            <!-- Spline Container -->
+            <div class="w-full h-[45%] relative">
+                <div class="w-full h-[115%] absolute -bottom-[10%] flex items-center justify-center scale-125">
+                    <spline-viewer url="https://prod.spline.design/RfqAjOnSviCEEX3U/scene.splinecode" class="w-full h-full">
+                    </spline-viewer>
+                </div>
+            </div>
+
+            <!-- Welcome Card -->
+            <div class="mt-10 bg-white/90 backdrop-blur-sm px-8 py-5 rounded-[2.5rem] shadow-xl border border-white/50 max-w-sm text-center">
+                <p class="text-[#1A2D51] text-sm font-semibold leading-relaxed">
+                    Welcome to Riva! Let's get you registered in just a few steps.
+                </p>
+            </div>
+
+            <!-- Pagination Indicators -->
+            <div class="flex gap-2 mt-8">
+                <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                <div class="w-2 h-2 rounded-full bg-blue-500 w-6 transition-all"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Right Section (Profile Form Area) -->
+    <div class="w-full md:w-1/2 flex flex-col bg-white p-8 md:px-12 lg:px-24 justify-start overflow-y-auto">
+
+        <div class="w-full max-w-[500px] mx-auto py-10">
+
+            <!-- Section Title -->
+            <h2 class="text-xl font-bold text-[#1A2D51] mb-8">
+                Profile Account
+            </h2>
+
+            <!-- Form -->
+            <form class="space-y-6">
+
+                <!-- Profile Image Upload -->
+                <div class="flex items-center gap-6 mb-8">
+
+                    <!-- Avatar -->
+                    <div class="relative">
+                        <img src="https://ui-avatars.com/api/?name=User&background=E6F0FF&color=2D5BFF" class="w-20 h-20 rounded-full object-cover border-2 border-blue-100" alt="Profile">
+
+                        <!-- Camera Icon -->
+                        <div class="absolute -bottom-1 -right-1 bg-white shadow-sm border border-gray-100 p-1.5 rounded-full">
+                            <i class="fa-solid fa-camera text-[10px] text-gray-500"></i>
+                        </div>
+                    </div>
+
+                    <!-- Upload Info -->
+                    <div>
+                        <p class="text-[13px] font-bold text-gray-700">
+                            Profile Photo
+                        </p>
+
+                        <button type="button" class="mt-1 px-4 py-1.5 border border-gray-200 rounded-lg text-[11px] font-bold text-gray-600 hover:bg-gray-50 flex items-center gap-2">
+
+                            <i class="fa-solid fa-upload"></i>
+                            Upload New Photo
+
+                        </button>
+
+                        <p class="text-[10px] text-gray-400 mt-1">
+                            JPG, GIF or PNG. Max size of 2MB.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Hourly Fee -->
+                <div class="space-y-2">
+                    <label class="text-[12px] font-bold text-gray-700 ml-1">
+                        Hourly Fee ($)
+                    </label>
+
+                    <input type="number" placeholder="Enter your hourly rate" class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm">
+                </div>
+
+                <!-- Gender -->
+                <div class="space-y-2">
+                    <label class="text-[12px] font-bold text-gray-700 ml-1">
+                        Gender
+                    </label>
+
+                    <select class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm appearance-none cursor-pointer">
+
+                        <option value="" disabled selected>Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+
+                    </select>
+                </div>
+
+                <!-- Description -->
+                <div class="space-y-2">
+                    <label class="text-[12px] font-bold text-gray-700 ml-1">
+                        About Description
+                    </label>
+
+                    <textarea rows="4" placeholder="Tell us about your caregiving philosophy, specialties, and personality..." class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm resize-none">
+                    </textarea>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex gap-4 pt-4">
+
+                    <!-- Back Button -->
+                    <button type="button" class="w-1/3 bg-black text-white py-4 rounded-2xl font-bold text-sm hover:opacity-90 transition-all">
+                        Back
+                    </button>
+
+                    <!-- Continue Button -->
+                    <button type="submit" class="w-2/3 bg-[#2D5BFF] text-white py-4 rounded-2xl font-bold text-sm shadow-lg shadow-blue-100 hover:bg-[#1A4BFF] transition-all">
+                        Continue
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,136 @@
+<!-- Container -->
+<div class="min-h-screen w-full bg-[#F8F9FB] font-sans flex overflow-hidden">
+
+    <!-- Left -->
+    <div class="hidden md:flex w-1/2 relative overflow-hidden bg-gradient-to-br from-[#E6F0FF] to-[#D1E4FF]">
+
+        <!-- Logo -->
+        <div class="absolute top-10 left-10 flex flex-col items-center z-30">
+            <img src="/Picture1.png" class="w-24 h-24 object-contain" alt="RIVA Logo">
+
+        </div>
+
+        <!-- Icon -->
+        <div class="absolute top-1/4 right-20 bg-white/70 backdrop-blur-md p-3 rounded-2xl shadow-sm z-20">
+            <i class="fa-solid fa-user-doctor text-green-500 text-xl"></i>
+        </div>
+        <div class="absolute top-30 left-30 bg-white/70 backdrop-blur-md p-3 rounded-2xl shadow-sm z-20">
+            <i class="fa-solid fa-heart-pulse text-[#2D5BFF] text-xl"></i>
+        </div>
+
+
+        <!-- Floating Icon 3 -->
+        <div class="absolute bottom-40 left-10 bg-white/70 backdrop-blur-md p-3 rounded-2xl shadow-sm z-20">
+            <i class="fa-solid fa-shield-halved text-orange-400 text-xl"></i>
+        </div>
+
+        <!-- 3D -->
+        <div class="relative z-10 flex flex-col items-center justify-center w-full h-full pt-20">
+            <div class="w-full h-[50%] relative">
+                <div class="w-full h-[115%] absolute -bottom-[10%] flex items-center justify-center scale-125">
+                    <spline-viewer url="https://prod.spline.design/RfqAjOnSviCEEX3U/scene.splinecode" class="w-full h-full"></spline-viewer>
+                </div>
+            </div>
+
+            <!-- Card -->
+            <div class="mt-10 bg-white/90 backdrop-blur-sm px-8 py-4 rounded-3xl shadow-xl border border-white/50 max-w-sm text-center transform transition-all hover:scale-105">
+                <p class="text-[#1A2D51] text-sm font-semibold leading-relaxed">
+                    Welcome to Riva! Let's get you registered in just a few steps.
+                </p>
+            </div>
+
+            <!-- Indicators -->
+            <div class="flex gap-2 mt-8">
+                <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right -->
+    <div class="w-full md:w-1/2 flex flex-col bg-white p-8 md:px-12 lg:px-20 justify-start overflow-y-auto">
+
+        <!-- Form -->
+        <form class="w-full max-w-[500px] mx-auto py-10 space-y-5">
+
+            <!-- Inputs -->
+            <div class="space-y-4">
+
+                <!-- Name -->
+                <div class="space-y-1">
+                    <label class="text-[12px] font-bold text-gray-700 ml-1">Full Name *</label>
+                    <input type="text" placeholder="Enter your full name" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-400 text-sm outline-none transition-all">
+                </div>
+
+                <!-- Phone -->
+                <div class="space-y-1">
+                    <label class="text-[12px] font-bold text-gray-700 ml-1">Phone Number *</label>
+                    <input type="tel" placeholder="+1 (555) 123-4567" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-400 text-sm outline-none transition-all">
+                </div>
+
+                <!-- Email -->
+                <div class="space-y-1">
+                    <label class="text-[12px] font-bold text-gray-700 ml-1">Email</label>
+                    <input type="email" placeholder="your.email@example.com" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-400 text-sm outline-none transition-all">
+                </div>
+
+                <!-- Password -->
+                <div class="space-y-1">
+                    <label class="text-[12px] font-bold text-gray-700 ml-1">Password</label>
+                    <input type="password" placeholder="Password" class="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-400 text-sm outline-none transition-all">
+                </div>
+
+            </div>
+
+            <!-- Roles -->
+            <div class="space-y-3 pt-2">
+
+                <!-- Patient -->
+                <label class="flex items-center p-4 border border-gray-100 rounded-2xl cursor-pointer hover:bg-blue-50/50 transition-all group relative">
+                    <div class="bg-blue-100 p-2 rounded-lg mr-4">
+                        <i class="fa-solid fa-user text-blue-500"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[13px] font-bold text-gray-800">Patient</p>
+                        <p class="text-[11px] text-gray-400 font-medium">I'm seeking medical care and support</p>
+                    </div>
+                    <input type="radio" name="role" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                </label>
+
+                <!-- Doctor -->
+                <label class="flex items-center p-4 border border-gray-100 rounded-2xl cursor-pointer hover:bg-green-50/50 transition-all group">
+                    <div class="bg-green-100 p-2 rounded-lg mr-4">
+                        <i class="fa-solid fa-user-doctor text-green-500"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[13px] font-bold text-gray-800">Doctor</p>
+                        <p class="text-[11px] text-gray-400 font-medium">I'm a medical professional providing care</p>
+                    </div>
+                    <input type="radio" name="role" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                </label>
+
+                <!-- Caregiver -->
+                <label class="flex items-center p-4 border border-gray-100 rounded-2xl cursor-pointer hover:bg-purple-50/50 transition-all group">
+                    <div class="bg-purple-100 p-2 rounded-lg mr-4">
+                        <i class="fa-solid fa-heart text-purple-500"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-[13px] font-bold text-gray-800">Caregiver</p>
+                        <p class="text-[11px] text-gray-400 font-medium">I'm caring for a family member or patient</p>
+                    </div>
+                    <input type="radio" name="role" class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                </label>
+
+            </div>
+
+            <!-- Button -->
+            <button type="submit" class="w-full bg-[#2D5BFF] text-white py-4 rounded-xl font-bold text-sm shadow-lg shadow-blue-100 hover:bg-[#1A4BFF] transition-all">
+                Continue
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
