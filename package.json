@@ -33,7 +33,10 @@
     "@angular/router": "^21.0.0",
     "@angular/ssr": "^21.0.1",
     "@fortawesome/fontawesome-free": "^7.2.0",
+<<<<<<< HEAD
     "@google/generative-ai": "^0.24.1",
+=======
+>>>>>>> 487f2a7d28cee868c1bd82702439af01094e73a4
     "@tailwindcss/postcss": "^4.2.0",
     "@types/three": "^0.183.1",
     "express": "^5.1.0",
