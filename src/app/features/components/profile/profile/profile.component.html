@@ -1,0 +1,135 @@
+
+<div class="max-w-6xl mx-auto bg-sky-100  rounded-3xl shadow-sm border border-blue-300  overflow-hidden font-sans" [formGroup]="accountForm">
+  
+  <div class="p-6 pb-0 bg-white">
+    <h1 class="text-2xl font-bold text-slate-800 mb-6">My Account</h1>
+    <div class="flex flex-wrap gap-1 border-b border-gray-100">
+      <button class="px-6 py-3 bg-sky-400 text-white rounded-t-xl font-medium text-sm">Personal Information</button>
+      <button class="px-6 py-3 text-slate-700 hover:bg-gray-200 rounded-t-xl transition text-sm">Security Settings</button>
+      <button class="px-6 py-3 text-slate-700 hover:bg-gray-200 rounded-t-xl transition text-sm">Notification Settings</button>
+      <button class="px-6 py-3 text-slate-700 hover:bg-gray-200 rounded-t-xl transition text-sm">Medical Records</button>
+    </div>
+  </div>
+
+  <div class="p-8">
+    <h2 class="text-xl font-bold text-slate-700 mb-8">Personal Information</h2>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      
+      <div class="lg:col-span-7 space-y-6">
+        
+        <div class="flex items-center gap-4 mb-8">
+
+          <img class="w-20 h-20 rounded-full" src="image/avatar2.jpeg" alt="Rounded avatar">
+         
+          <div>
+            <h3 class="text-lg font-bold text-slate-800 leading-tight">Mohamed</h3>
+            <button class="text-xs text-gray-400 border border-gray-200 px-4 py-1 rounded-full mt-1 hover:bg-gray-50">Change</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-slate-600 mb-1.5">First Name *</label>
+            <input type="text" formControlName="firstName" 
+                   class="w-full p-3  border border-blue-50 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-600 mb-1.5">Last Name *</label>
+            <input type="text" formControlName="lastName" 
+                   class="w-full p-3  border border-blue-50 rounded-xl focus:bg-white focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-slate-600 mb-1.5">Birthdate *</label>
+            <input type="text" formControlName="birthdate" 
+                   class="w-full p-3  border border-blue-50 rounded-xl outline-none">
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-slate-600 mb-1.5">Email Address <span class="text-xs text-gray-400 font-normal">⌵</span></label>
+            <input type="email" formControlName="email" 
+                   class="w-full p-3  border border-blue-50 rounded-xl outline-none">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-600 mb-1.5">Country *</label>
+            <div class="relative">
+                <select formControlName="country" class="w-full p-3 border border-blue-50 rounded-xl outline-none appearance-none">
+                    <option value="Egypt">Egypt</option>
+                </select>
+                <span class="absolute right-4 top-4 text-gray-400 text-xs">
+                  <!-- <i class="fa-solid fa-circle-down"></i> -->
+                </span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-600 mb-1.5">Phone</label>
+            <input type="text" formControlName="phone" 
+                   class="w-full p-3  border border-blue-50 rounded-xl outline-none">
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-slate-600 mb-1.5">Full Address *</label>
+            <input type="text" formControlName="address" 
+                   class="w-full p-3 bg-blue-50/30 border border-blue-50 rounded-xl outline-none">
+          </div>
+        </div>
+
+        <div class="flex gap-4 pt-6">
+          <button (click)="onSave()" class="px-12 py-3  bg-blue-500 text-white rounded-full font-medium hover:bg-blue-600 transition-colors shadow-sm">
+            Save
+          </button>
+          <button (click)="onUpdate()" class="px-12 py-3 text-slate-400 border border-gray-200 rounded-full hover:bg-gray-50 transition-colors">
+            Update
+          </button>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5"  [formGroup]="passwordForm">
+        <div class="bg-blue-50/40 rounded-3xl p-8 border border-blue-300 shadow-sm">
+          <div class="flex items-center gap-3 mb-8">
+            <div class="bg-white p-2 rounded-lg shadow-sm">
+                <svg class="w-5 h-5 text-blue-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zM7 7a3 3 0 116 0v2H7V7z"/></svg>
+            </div>
+            <h3 class="text-xl font-bold text-slate-700">Change Password</h3>
+          </div>
+
+          <div class="space-y-5">
+            <div>
+              <label class="block text-sm font-medium text-slate-600 mb-1">Current Password?</label>
+              <div class="relative">
+                <input type="password" formControlName="currentPassword" placeholder="" class="w-full p-3 bg-white border border-blue-50 rounded-xl focus:ring-1 focus:ring-blue-200 outline-none">
+                <span class="absolute right-4 top-3.5 text-blue-400 text-sm">
+                  <i class="fa-solid fa-lock"></i>
+                </span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-600 mb-1">New Password</label>
+              <div class="relative">
+                <input type="password" formControlName="newPassword" placeholder="" class="w-full p-3 bg-white border border-blue-50 rounded-xl focus:ring-1 focus:ring-blue-200 outline-none">
+                <span class="absolute right-4 top-3.5 text-blue-400 text-sm">   <i class="fa-solid fa-lock"></i></span>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-600 mb-1">Confirm Password</label>
+              <div class="relative">
+                <input type="password" placeholder="••••••••" formControlName="confirmPassword" class="w-full p-3 bg-white border border-blue-50 rounded-xl focus:ring-1 focus:ring-blue-200 outline-none">
+                <span class="absolute right-4 top-3.5 text-blue-400 text-sm">   <i class="fa-solid fa-lock"></i></span>
+              </div>
+            </div>
+
+            <button (click)="onForgotPassword()" class="text-sm text-blue-400 font-medium hover:underline inline-block mt-2">Forgot Password?</button>
+
+            <div class="flex gap-3 pt-4">
+              <button (click)="onSavePassword()" class="flex-1 py-3.5 bg-blue-500 text-white rounded-2xl font-bold hover:bg-blue-600 transition-all shadow-md shadow-blue-100">
+                Save Changes
+              </button>
+              <button (click)="onUpdatePassword()" class="px-6 py-3.5 text-slate-400 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 transition-all">
+               Update
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
