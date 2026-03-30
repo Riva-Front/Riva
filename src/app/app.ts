@@ -1,26 +1,16 @@
-<<<<<<< HEAD
 import { Component, signal, OnInit } from '@angular/core';
-import { RouterOutlet, Router } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs/operators';
 import { AuthService } from './service/auth.service';
-=======
-import { Component, signal } from '@angular/core';
-import { RouterOutlet, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
->>>>>>> 487f2a7d28cee868c1bd82702439af01094e73a4
 
+import { SigninComponent } from './core/components/auth/signin/signin.component';
 import { ForgetPasswordComponent } from './core/components/auth/forget-password/forget-password.component';
 import { NewPasswordComponent } from './core/components/auth/new-password/new-password.component';
 import { SignupComponent } from './core/components/auth/signup/signup.component';
 import { ProfileAccountComponent } from './core/components/auth/profile-account/profile-account.component';
-import { SigninComponent } from './core/components/auth/signin/signin.component';
-import { NavbarComponent } from "./core/components/layout/navbar/navbar.component";
-import { FooterComponent } from "./core/components/layout/footer/footer.component";
-<<<<<<< HEAD
-import { NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
-=======
->>>>>>> 487f2a7d28cee868c1bd82702439af01094e73a4
+import { NavbarComponent } from './core/components/layout/navbar/navbar.component';
+import { FooterComponent } from './core/components/layout/footer/footer.component';
 
 @Component({
   selector: 'app-root',
@@ -39,9 +29,7 @@ import { filter } from 'rxjs/operators';
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
-<<<<<<< HEAD
 export class App implements OnInit {
-
 
   protected readonly title = signal('project-riva');
 
@@ -50,18 +38,16 @@ export class App implements OnInit {
     private auth: AuthService
   ) {}
 
-  // ✅ AUTO LOGIN هنا
   ngOnInit(): void {
-      this.router.events
-    .pipe(filter(event => event instanceof NavigationEnd))
-    .subscribe(() => {
-      window.scrollTo(0, 0);
-    });
+    // Scroll to top on route change
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        window.scrollTo(0, 0);
+      });
 
-
+    // AUTO LOGIN
     const token = this.auth.getToken();
-
-    // لو فيه توكن يدخل dashboard مباشرة
     if (token) {
       // this.router.navigate(['/dashboard-p']);
     } else {
@@ -69,7 +55,7 @@ export class App implements OnInit {
     }
   }
 
-  // علشان نخفي navbar و footer في صفحات auth
+  // Hide navbar/footer on auth pages
   isAuthPage(): boolean {
     const authRoutes = [
       'signin',
@@ -81,24 +67,7 @@ export class App implements OnInit {
       'welcome1',
       'add-new-medication',
       'doctor-cards'
-
     ];
-
-    return authRoutes.some(route =>
-      this.router.url.includes(route)
-    );
-  }
-=======
-export class App {
-
-  protected readonly title = signal('project-riva');
-
-  constructor(public router: Router) {}
-
-  isAuthPage(): boolean {
-    const authRoutes = ['signin', 'signup', 'forget-password', 'new-password', 'profile-account', 'welcome1', 'dashboard-p'];
     return authRoutes.some(route => this.router.url.includes(route));
   }
-
->>>>>>> 487f2a7d28cee868c1bd82702439af01094e73a4
 }

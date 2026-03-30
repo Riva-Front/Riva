@@ -55,11 +55,8 @@ export class AuthGuard implements CanActivate {
       console.log('Redirecting to login');
 
       // نحوله لصفحة تسجيل الدخول
-<<<<<<< HEAD
       this.router.navigate(['/signin']);
-=======
       this.router.navigate(['/login']);
->>>>>>> 487f2a7d28cee868c1bd82702439af01094e73a4
 
       // نمنع فتح الصفحة المطلوبة
       return false;
