@@ -1,15 +1,62 @@
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { AuthService, RegisterPayload, LoginResponse } from '../../../../service/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './signup.component.html',
-  styleUrl: './signup.component.css',
+  styleUrls: ['./signup.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
+  form!: FormGroup;
+  errorMessage = '';
+  successMessage = '';
 
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.form = this.fb.group({
+      first_name: ['', [Validators.required, Validators.minLength(2)]],
+      last_name: ['', [Validators.required, Validators.minLength(2)]],
+      phone: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      password_confirmation: ['', [Validators.required]],
+      role: ['patient', [Validators.required]],
+    });
+  }
+
+  onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.errorMessage = 'Please fill all fields correctly';
+      return;
+    }
+
+    const payload: RegisterPayload = this.form.getRawValue();
+
+    this.authService.register(payload).subscribe({
+      next: (res: LoginResponse) => {
+        this.errorMessage = '';
+        this.successMessage = 'Registration successful! Redirecting...';
+        // ✅ مش بنحفظ token هنا — بنروح signin عشان يسجل دخول
+        this.router.navigate(['/profile-account']);
+      },
+      error: (err) => {
+        console.error('Register Error:', err);
+        if (err.status === 422) {
+          this.errorMessage = err?.error?.message || 'Validation failed';
+        } else if (err.status === 0) {
+          this.errorMessage = 'Cannot connect to server';
+        } else {
+          this.errorMessage = err?.error?.message || 'Registration failed';
+        }
+      }
+    });
+  }
 }

@@ -10,6 +10,10 @@ import { Welcome1Component } from './core/components/auth/welcome1/welcome1.comp
 import { DashboardPComponent } from './core/components/auth/dashboard-p/dashboard-p.component';
 import { AddNewMedicationComponent } from './core/components/auth/add-new-medication/add-new-medication.component';
 import { DoctorCardsComponent } from './core/components/auth/doctor-cards/doctor-cards.component';
+import { ChatComponent } from './core/components/auth/chat/chat.component';
+import { AuthGuard } from './guards/auth-guard';
+import { DashboardComponent } from './core/components/auth/dashboard/dashboard/dashboard.component';
+import { ContactComponent } from './features/components/contact/contact.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -20,9 +24,15 @@ export const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'profile-account', component: ProfileAccountComponent },
   { path: 'welcome1', component: Welcome1Component },
-  { path: 'dashboard-p', component: DashboardPComponent },
+  { path: 'dashboard-p', component: DashboardPComponent, canActivate: [AuthGuard] },
   { path: 'add-new-medication', component: AddNewMedicationComponent },
   { path: 'doctor-cards', component: DoctorCardsComponent },
+  { path: 'chat', component: ChatComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }, 
+  { path: 'contact', component: ContactComponent },
+  {path: 'chat', component: ChatComponent },
+
+  { path: '**', redirectTo: '/home' },
 ];
 
 @NgModule({

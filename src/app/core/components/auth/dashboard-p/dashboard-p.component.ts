@@ -16,6 +16,14 @@ export class DashboardPComponent {
   painLevel: number = 5; // مستوى الألم الحالي
   selectedMood: number | null = 5; // الحالة المزاجية المحددة (Emoji)
   notes: string = ''; // الملاحظات أو الأعراض
+  // تعريف المتغير لحفظ حالة النوم (ممكن تحطيه تحت الـ painLevel)
+sleepQuality: string = ''; 
+
+// الـ Function اللي بتغير القيمة
+setSleepQuality(value: string) {
+    this.sleepQuality = value;
+    console.log('Sleep quality selected:', value);
+}
 
   // مصفوفة الحالات المزاجية + مستوى الألم المرتبط بكل واحد
   moods = [
@@ -28,13 +36,14 @@ export class DashboardPComponent {
 
   // مصفوفة الأيام الأسبوعية مع حالة أخذ الدواء لكل يوم
   week = [
-    {day: 'S', taken: false },
+  
     { day: 'S', taken: false },
     { day: 'M', taken: false },
     { day: 'T', taken: false },
     { day: 'W', taken: false },
     { day: 'Th', taken: false },
     { day: 'F', taken: false },
+    {day: 'S', taken: false },
   ];
 
   // حساب نسبة الالتزام بالأدوية (Adherence)
@@ -77,7 +86,8 @@ export class DashboardPComponent {
   submitCheckIn() {
     alert(`Submitted Successfully!
 Pain Level: ${this.painLevel}
-Mood: ${this.getMoodEmoji()}`); // عرض رسالة للمستخدم بالمستوى الحالي والمزاج
+Mood: ${this.getMoodEmoji()}
+Sleep Quality: ${this.sleepQuality} `); // عرض رسالة للمستخدم بالمستوى الحالي والمزاج
   }
 
   // إرجاع إيموجي المزاج الحالي

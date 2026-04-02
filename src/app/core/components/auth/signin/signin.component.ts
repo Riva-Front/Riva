@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../../service/auth.service';
+import { AuthService, LoginResponse, User } from '../../../../service/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,38 +12,31 @@ import { Router } from '@angular/router';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SigninComponent implements OnInit {
-
-  // ==========================================================
-  // 🟣 VARIABLES
   form!: FormGroup;
-  robotMessage: string = '';
-  errorMessage: string = '';
+  robotMessage = '';
+  errorMessage = '';
 
-  // ==========================================================
-  // 🟣 Constructor
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
   ) {}
 
-  // ==========================================================
-  // 🟣 ngOnInit
   ngOnInit(): void {
     this.form = this.fb.group({
-      email: [''],
-      password: ['']
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]]
     });
-
-    // ✅ لو المستخدم already logged in
-    if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/dashboard-p']);
-    }
   }
 
-  // ==========================================================
-  // 🟣 speak()
-  speak(message: string) {
+  speak(message: string): void {
+    if (
+      typeof window === 'undefined' ||
+      typeof window.speechSynthesis === 'undefined' ||
+      typeof SpeechSynthesisUtterance === 'undefined'
+    ) {
+      return;
+    }
     const speech = new SpeechSynthesisUtterance(message);
     speech.lang = 'en-US';
     speech.rate = 1;
@@ -51,44 +44,62 @@ export class SigninComponent implements OnInit {
     window.speechSynthesis.speak(speech);
   }
 
-  // ==========================================================
-  // 🟣 onSubmit()
   onSubmit(): void {
-    const { email, password } = this.form.value;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.errorMessage = 'Please enter a valid email and password';
+      return;
+    }
+
+    const { email, password } = this.form.getRawValue();
 
     this.authService.login(email, password).subscribe({
-      // ================= SUCCESS =================
-      next: (res: any) => {
+      next: (res: LoginResponse) => {
         this.errorMessage = '';
         this.robotMessage = '';
 
-        // حفظ التوكن
+        // ✅ حفظ التوكن
         this.authService.saveToken(res);
-        console.log('Login Response:', res);
 
-        // نجيب بيانات المستخدم
-        this.authService.getProfile().subscribe(user => {
-          console.log('User Profile:', user);
-
-          // تخزين نوع المستخدم
-          localStorage.setItem('role', user.role);
-          localStorage.setItem('hasLoggedBefore', 'true');
-
-          // ✅ توجيه ذكي
-          const firstLogin = !localStorage.getItem('hasLoggedBefore');
-          if (firstLogin) {
+        // ✅ جيب الـ profile عشان تاخد الـ role
+        this.authService.getProfile().subscribe({
+          next: (user: User) => {
+            if (user?.role) {
+              localStorage.setItem('role', user.role);
+            }
+            // ✅ روح welcome1 الأول
             this.router.navigate(['/welcome1']);
-          } else {
-            this.router.navigate(['/dashboard-p']);
+          },
+          error: (profileError) => {
+            console.log('Profile Error:', profileError);
+            this.authService.logout();
+
+            if (profileError.status === 401) {
+              this.errorMessage = 'Authentication failed while loading profile.';
+            } else if (profileError.status === 0) {
+              this.errorMessage = 'Cannot connect to server.';
+            } else {
+              this.errorMessage = profileError?.error?.message || 'Failed to load user profile';
+            }
+
+            this.speak(this.errorMessage);
           }
         });
       },
-
-      // ================= ERROR =================
       error: (error) => {
-        console.log(error);
-        this.errorMessage = "Email or Password is invalid!";
-        this.speak("Oops! Email or password is incorrect!");
+        console.log('Full Login Error:', error);
+
+        if (error.status === 422) {
+          this.errorMessage = error?.error?.message || 'Please enter valid login data.';
+        } else if (error.status === 401) {
+          this.errorMessage = 'Email or Password is invalid!';
+        } else if (error.status === 0) {
+          this.errorMessage = 'Cannot connect to server.';
+        } else {
+          this.errorMessage = error?.error?.message || 'Something went wrong';
+        }
+
+        this.speak(this.errorMessage);
       }
     });
   }

@@ -1,0 +1,83 @@
+<div *ngIf="activeChat()">
+    <div class="chat-window shadow-premium">
+        <header class="chat-header">
+            <div class="user-info">
+                <img [src]="activeChat()?.doctorAvatar" [alt]="activeChat()?.doctorName" class="avatar-header">
+                <div class="status-info">
+                    <h2>{{ activeChat()?.doctorName }}</h2>
+                    <span class="online-status">
+                        {{ activeChat()?.isOnline ? t().online : t().offline }} · {{ activeChat()?.doctorSpecialty }}
+                    </span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="summarize-btn" (click)="summarizeChat()" [title]="t().summarize" [disabled]="isLoading() || messages().length < 2">
+        Summarize
+    </button>
+
+                <div class="menu-container">
+                    <button class="menu-trigger" (click)="toggleMenu($event)" title="More Options">
+            Menu
+        </button>
+
+                    <div *ngIf="showMenu()" class="options-menu animate-fade-in">
+                        <button class="menu-item" (click)="clearHistory()">
+                <i class="fas fa-eraser"></i> {{ t().clearHistory }}
+            </button>
+                        <button class="menu-item danger" (click)="deleteCurrentChat()">
+                <i class="fas fa-trash-alt"></i> {{ t().deleteChat }}
+            </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="messages-container" #scrollContainer>
+            <ng-container *ngFor="let msg of messages(); let i = index">
+                <div [ngClass]="['msg-wrapper', msg.role === 'user' ? 'user' : 'model']">
+                    <img [src]="msg.role === 'user' ? 'https://www.w3schools.com/howto/img_avatar.png' : activeChat()?.doctorAvatar" class="msg-avatar">
+
+                    <div class="msg-content">
+                        <div *ngIf="hasImage(msg)" class="msg-image-preview">
+                            <ng-container *ngFor="let part of msg.parts">
+                                <img *ngIf="part.inlineData" [src]="'data:' + part.inlineData.mimeType + ';base64,' + part.inlineData.data" class="chat-img" (click)="openImage('data:' + part.inlineData.mimeType + ';base64,' + part.inlineData.data)">
+                            </ng-container>
+                        </div>
+
+                        <div class="msg-bubble" [innerHTML]="formatMessage(msg.parts[0]?.text || '')"></div>
+                        <span class="timestamp">{{ msg.timestamp | date:'shortTime' }}</span>
+                    </div>
+                </div>
+            </ng-container>
+
+            <div *ngIf="isLoading()" class="msg-wrapper model">
+                <img [src]="activeChat()?.doctorAvatar" class="msg-avatar">
+                <div class="msg-bubble loading"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+
+        <footer class="chat-footer">
+            <div *ngIf="selectedFile()" class="attachment-preview-bar">
+                <div class="preview-card">
+                    <img [src]="filePreviewUrl()" class="preview-thumb">
+                    <span class="preview-name">{{ selectedFile()?.name }}</span>
+                    <button class="remove-attachment" (click)="removeFile()">×</button>
+                </div>
+            </div>
+
+            <div class="input-glass">
+                <button (click)="fileInput.click()" [title]="t().attachFile">Attach</button>
+                <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display:none">
+
+                <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()" [placeholder]="t().typeMessage" [disabled]="isLoading()">
+
+                <button (click)="sendMessage()" [disabled]="isLoading() || (!userInput.trim() && !selectedFile())">
+                    Send
+                </button>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<div *ngIf="!activeChat()" class="welcome-dashboard">
+</div>

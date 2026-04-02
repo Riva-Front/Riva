@@ -6,11 +6,9 @@
         </div>
         <div class="flex flex-col gap-6 text-gray-400">
             <button class="p-2 bg-blue-50 text-blue-600 rounded-lg" routerLink="/dashboard-p"><i class="fas fa-home"></i></button>
-            <button class="p-2 hover:text-blue-600" routerLink="/add-new-medication"><i class="fas fa-pills"></i></button>
-            <button class="p-2 hover:text-blue-600"><i class="fas fa-user"></i></button>
-            <button class="p-2 hover:text-blue-600"><i class="fas fa-phone"></i></button>
-            <button class="p-2 hover:text-blue-600" routerLink="/doctor-cards"><i class="fa-solid fa-user-doctor"></i></button>
-            <button class="p-2 hover:text-blue-600" routerLink="/doctor-cards"><i class="fa-solid fa-user-doctor"></i></button>
+            <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/add-new-medication"><i class="fas fa-pills"></i></button>
+            <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/doctor-cards"><i class="fa-solid fa-user-doctor"></i></button>
+            <button class="p-2 hover:text-blue-600" routerLink="/chat"><i class="fa-brands fa-rocketchat"></i></button>
 
         </div>
         <div class="mt-auto">
@@ -156,7 +154,10 @@
                 <div class="bg-white p-6 md:p-8 rounded-[30px] md:rounded-[40px] shadow-sm border border-white">
                     <h3 class="font-bold text-lg md:text-xl mb-6">Today's Medication</h3>
                     <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-3xl mb-6 border border-slate-100">
-                        <div class="bg-blue-100 p-3 md:p-4 rounded-2xl text-blue-600"><i class="fas fa-capsules text-xl md:text-2xl"></i></div>
+                        <div class="bg-blue-100 p-3 md:p-4 rounded-2xl text-blue-600">
+                            <img src="c49002412c45c0d3237e5878fd78c0b8.png.webp">
+
+                        </div>
                         <div>
                             <p class="font-bold text-slate-800 text-base md:text-lg">Donepezil</p>
                             <p class="text-gray-400 text-sm">10mg / 1 Pill</p>
