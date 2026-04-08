@@ -1,0 +1,153 @@
+<div class="min-h-screen bg-slate-50 flex">
+
+    <aside class="fixed left-0 top-0 h-screen w-20 bg-white border-r border-gray-100 hidden md:flex flex-col items-center py-6 gap-8 shadow-sm z-50">
+        <div class="text-blue-600 font-bold text-xl">
+            <img src="/Picture1.png" routerLink="/dashboard-p" alt="RIVA Logo" class="w-12 hover:scale-105 transition-transform cursor-pointer">
+        </div>
+        <div class="flex flex-col gap-6 text-gray-400">
+            <button class="p-2 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all" routerLink="/dashboard"><i class="fas fa-home"></i></button>
+            <button class="p-2 bg-blue-50 text-blue-600 rounded-xl transition-all" routerLink="/myprofil"><i class="fa-solid fa-circle-user"></i></button>
+            <button class="p-2 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all" routerLink="/contact"><i class="fa-solid fa-phone"></i></button>
+        </div>
+        <div class="mt-auto">
+            <button class="p-2 text-gray-300 hover:text-gray-600"><i class="fas fa-cog"></i></button>
+        </div>
+    </aside>
+
+    <main class="flex-1 md:ml-20 p-4 md:p-8">
+        <div class="max-w-6xl mx-auto space-y-6">
+
+            <div class="flex flex-col gap-1">
+                <h1 class="text-2xl font-black text-slate-800">Account Settings</h1>
+                <p class="text-sm text-gray-500 font-medium">Manage your personal information and security preferences.</p>
+            </div>
+
+            <div class="bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
+
+                <div class="flex gap-2 px-8 pt-6 border-b border-gray-50 overflow-x-auto">
+                    <button class="px-6 py-3 text-sm font-bold rounded-t-2xl border-b-2 border-blue-600 text-blue-600 bg-blue-50/50">
+                        Personal Info
+                    </button>
+                    <button class="px-6 py-3 text-sm font-bold text-gray-400 hover:text-blue-500 transition-colors">
+                        Security
+                    </button>
+                    <button class="px-6 py-3 text-sm font-bold text-gray-400 hover:text-blue-500 transition-colors">
+                        Notifications
+                    </button>
+                    <button class="px-6 py-3 text-sm font-bold text-gray-400 hover:text-blue-500 transition-colors">
+                        Medical Records
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 p-8 md:p-10">
+
+                    <div class="lg:col-span-7 space-y-8" [formGroup]="accountForm">
+
+                        <div class="flex items-center gap-6 pb-6 border-b border-gray-50">
+                            <div class="relative group">
+                                <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center font-black text-2xl text-blue-600 shadow-inner">
+                                    {{ accountForm.get('firstName')?.value?.charAt(0) || 'M' }}
+                                </div>
+                                <button class="absolute -bottom-2 -right-2 bg-white p-2 rounded-xl shadow-md border border-gray-100 text-blue-500 hover:scale-110 transition-transform">
+                                    <i class="fas fa-camera text-xs"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-black text-slate-800">
+                                    {{ accountForm.get('firstName')?.value }} {{ accountForm.get('lastName')?.value }}
+                                </h3>
+                                <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Patient ID: #RIVA-2024</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="space-y-2">
+                                <label for="firstName" class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">First Name</label>
+                                <input id="firstName" type="text" formControlName="firstName" placeholder="First Name" class="w-full px-4 py-3 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium"
+                                />
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="lastName" class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Last Name</label>
+                                <input id="lastName" type="text" formControlName="lastName" placeholder="Last Name" class="w-full px-4 py-3 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium"
+                                />
+                            </div>
+
+                            <div class="md:col-span-2 space-y-2">
+                                <label for="email" class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Email Address</label>
+                                <input id="email" type="email" formControlName="email" placeholder="email@example.com" class="w-full px-4 py-3 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium"
+                                />
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="country" class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Country</label>
+                                <div class="relative">
+                                    <select id="country" formControlName="country" class="w-full px-4 py-3 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 outline-none transition-all font-medium appearance-none">
+                                        <option value="Egypt">Egypt</option>
+                                        <option value="UAE">UAE</option>
+                                        <option value="KSA">KSA</option>
+                                    </select>
+                                    <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="phone" class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Phone Number</label>
+                                <input id="phone" type="text" formControlName="phone" placeholder="+20 123..." class="w-full px-4 py-3 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 pt-4">
+                            <button (click)="onSave()" class="px-10 py-4 bg-slate-900 hover:bg-black text-white text-sm font-black rounded-2xl transition-all shadow-lg shadow-slate-200 active:scale-95">
+                                Save Changes
+                            </button>
+                            <button (click)="accountForm.reset()" class="px-8 py-4 border border-gray-200 text-gray-500 text-sm font-black rounded-2xl hover:bg-gray-50 transition-all">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5" [formGroup]="passwordForm">
+                        <div class="bg-blue-50/50 border border-blue-100 rounded-[32px] p-8 space-y-6">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-100">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <h3 class="font-black text-slate-800 tracking-tight">Security Settings</h3>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="space-y-1">
+                                    <label for="currentPassword" class="text-[10px] uppercase text-blue-600 font-black tracking-widest ml-1">Current Password</label>
+                                    <input id="currentPassword" type="password" formControlName="currentPassword" class="w-full px-4 py-3 bg-white border border-blue-100 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none transition-all font-medium" />
+                                </div>
+
+                                <div class="space-y-1">
+                                    <label for="newPassword" class="text-[10px] uppercase text-blue-600 font-black tracking-widest ml-1">New Password</label>
+                                    <input id="newPassword" type="password" formControlName="newPassword" class="w-full px-4 py-3 bg-white border border-blue-100 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none transition-all font-medium" />
+                                </div>
+
+                                <div class="space-y-1">
+                                    <label for="confirmPassword" class="text-[10px] uppercase text-blue-600 font-black tracking-widest ml-1">Confirm Password</label>
+                                    <input id="confirmPassword" type="password" formControlName="confirmPassword" class="w-full px-4 py-3 bg-white border border-blue-100 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none transition-all font-medium" />
+                                </div>
+                            </div>
+
+                            <button (click)="onForgotPassword()" class="text-xs text-blue-600 font-bold hover:underline">
+                                Forgot your password?
+                            </button>
+
+                            <div class="pt-2">
+                                <button (click)="onSavePassword()" [disabled]="passwordForm.invalid" class="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded-2xl font-black text-sm shadow-xl shadow-blue-100 transition-all active:scale-[0.98]">
+                                    Update Password
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

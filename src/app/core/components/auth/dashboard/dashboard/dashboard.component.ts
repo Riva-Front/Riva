@@ -9,12 +9,13 @@ import {
   ChartComponent,
   NgApexchartsModule
 } from 'ng-apexcharts';
+import { RouterModule } from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule, HttpClientModule],
+  imports: [CommonModule, NgApexchartsModule, HttpClientModule,RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA] // لدعم عناصر غير قياسية مثل spline-viewer
 
 })

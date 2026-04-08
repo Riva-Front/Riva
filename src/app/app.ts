@@ -131,6 +131,8 @@ export class App implements OnInit {
       'chat',
       'dashboard',
       'contact',
+      'myprofile',
+      'signup2'
     ];
     return authRoutes.some(route => this.router.url.includes(route));
   }

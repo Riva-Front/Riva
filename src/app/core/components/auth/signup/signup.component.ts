@@ -45,7 +45,7 @@ export class SignupComponent implements OnInit {
         this.errorMessage = '';
         this.successMessage = 'Registration successful! Redirecting...';
         // ✅ مش بنحفظ token هنا — بنروح signin عشان يسجل دخول
-        this.router.navigate(['/profile-account']);
+        this.router.navigate(['/signup2']);
       },
       error: (err) => {
         console.error('Register Error:', err);

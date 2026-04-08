@@ -51,63 +51,62 @@
             <i class="fa-solid fa-user-doctor text-lg"></i>
             <span class="text-[10px] font-bold">Doctors</span>
         </button>
-        <button class="flex flex-col items-center gap-1 text-gray-400">
-            <i class="fas fa-user text-lg"></i>
-            <span class="text-[10px] font-bold">Profile</span>
+        <button class="flex flex-col items-center gap-1 text-gray-400 " routerLink="/chat"> <i class="fa-brands fa-rocketchat"></i>
+            <span class=" text-[10px] font-bold ">Chat</span>
         </button>
     </nav>
 
     <!-- ===================== MAIN CONTENT ===================== -->
-    <main class="p-6 md:p-10 bg-gradient-to-br from-white to-[#F9FBFF] min-h-screen">
+    <main class="p-6 md:p-10 bg-gradient-to-br from-white to-[#F9FBFF] min-h-screen ">
 
         <!-- ===================== Page Title ===================== -->
-        <div class="text-center mb-10 md:mb-12">
-            <h1 class="text-3xl md:text-4xl font-black text-slate-800 leading-tight">
-                Choose who will follow your <span class="text-[#00D1B2]">health</span>
+        <div class="text-center mb-10 md:mb-12 ">
+            <h1 class="text-3xl md:text-4xl font-black text-slate-800 leading-tight ">
+                Choose who will follow your <span class="text-[#00D1B2] ">health</span>
             </h1>
-            <p class="text-slate-400 text-sm mt-3">
+            <p class="text-slate-400 text-sm mt-3 ">
                 You can change this later at any time
             </p>
         </div>
 
         <!-- ===================== GRID CONTENT ===================== -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-[1400px] mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-[1400px] mx-auto ">
 
             <!-- ===================== DOCTORS LIST ===================== -->
-            <div class="order-2 lg:order-1 lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+            <div class="order-2 lg:order-1 lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-start ">
 
                 <!-- Doctor Card 1 -->
-                <div class="bg-white border border-gray-100 p-6 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center w-full h-fit">
+                <div class="bg-white border border-gray-100 p-6 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center w-full h-fit ">
                     <!-- صورة الدكتور + التقييم -->
-                    <div class="relative mb-4">
-                        <img src="https://i.pravatar.cc/150?u=james" class="w-20 h-20 rounded-2xl object-cover grayscale hover:grayscale-0 transition-all">
-                        <span class="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm">★ 4.8</span>
+                    <div class="relative mb-4 ">
+                        <img src="https://i.pravatar.cc/150?u=james " class="w-20 h-20 rounded-2xl object-cover grayscale hover:grayscale-0 transition-all ">
+                        <span class="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm ">★ 4.8</span>
                     </div>
                     <!-- اسم وتخصص -->
-                    <h3 class="font-bold text-base text-slate-800 tracking-tight">Dr. James Wilson</h3>
-                    <p class="text-[10px] text-blue-500 font-black uppercase tracking-wider mt-1 mb-3">General Practice</p>
+                    <h3 class="font-bold text-base text-slate-800 tracking-tight ">Dr. James Wilson</h3>
+                    <p class="text-[10px] text-blue-500 font-black uppercase tracking-wider mt-1 mb-3 ">General Practice</p>
                     <!-- وصف مختصر -->
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6 line-clamp-2 px-2">Board certified family physician with 12 years of experience...</p>
+                    <p class="text-xs text-slate-500 leading-relaxed mb-6 line-clamp-2 px-2 ">Board certified family physician with 12 years of experience...</p>
                     <!-- زر الاختيار -->
-                    <button class="w-full bg-[#0052FF] hover:bg-blue-700 text-white py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all active:scale-95">
+                    <button class="w-full bg-[#0052FF] hover:bg-blue-700 text-white py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all active:scale-95 ">
                         Select Doctor
                     </button>
                 </div>
 
                 <!-- Doctor Card 2 -->
-                <div class="bg-white border border-gray-100 p-6 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center w-full h-fit">
+                <div class="bg-white border border-gray-100 p-6 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center w-full h-fit ">
                     <!-- صورة الدكتور + التقييم -->
-                    <div class="relative mb-4">
-                        <img src="https://i.pravatar.cc/150?u=sarah" class="w-20 h-20 rounded-2xl object-cover grayscale hover:grayscale-0 transition-all">
-                        <span class="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm">★ 4.9</span>
+                    <div class="relative mb-4 ">
+                        <img src="https://i.pravatar.cc/150?u=sarah " class="w-20 h-20 rounded-2xl object-cover grayscale hover:grayscale-0 transition-all ">
+                        <span class="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm ">★ 4.9</span>
                     </div>
                     <!-- اسم وتخصص -->
-                    <h3 class="font-bold text-base text-slate-800 tracking-tight">Dr. Sarah Chen</h3>
-                    <p class="text-[10px] text-blue-500 font-black uppercase tracking-wider mt-1 mb-3">Cardiologist</p>
+                    <h3 class="font-bold text-base text-slate-800 tracking-tight ">Dr. Sarah Chen</h3>
+                    <p class="text-[10px] text-blue-500 font-black uppercase tracking-wider mt-1 mb-3 ">Cardiologist</p>
                     <!-- وصف مختصر -->
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6 line-clamp-2 px-2">15+ years experience in cardiovascular medicine...</p>
+                    <p class="text-xs text-slate-500 leading-relaxed mb-6 line-clamp-2 px-2 ">15+ years experience in cardiovascular medicine...</p>
                     <!-- زر الاختيار -->
-                    <button class="w-full bg-[#0052FF] hover:bg-blue-700 text-white py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all active:scale-95">
+                    <button class="w-full bg-[#0052FF] hover:bg-blue-700 text-white py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all active:scale-95 ">
                         Select Doctor
                     </button>
                 </div>
@@ -115,32 +114,32 @@
             </div>
 
             <!-- ===================== RIGHT SIDE (Riva + Upcoming Visit) ===================== -->
-            <div class="order-1 lg:order-2 lg:col-span-4 space-y-6">
+            <div class="order-1 lg:order-2 lg:col-span-4 space-y-6 ">
 
                 <!-- Riva 3D Card -->
-                <div class="bg-[#EEF2FF] rounded-[2.5rem] p-6 flex flex-col items-center border border-blue-50">
-                    <div class="w-48 h-48 md:w-64 md:h-64">
-                        <spline-viewer url="https://prod.spline.design/RfqAjOnSviCEEX3U/scene.splinecode" style="width:100%; height:100%; transform: rotateY(180deg);">
+                <div class="bg-[#EEF2FF] rounded-[2.5rem] p-6 flex flex-col items-center border border-blue-50 ">
+                    <div class="w-48 h-48 md:w-64 md:h-64 ">
+                        <spline-viewer url="https://prod.spline.design/RfqAjOnSviCEEX3U/scene.splinecode " style="width:100%; height:100%; transform: rotateY(180deg); ">
                         </spline-viewer>
                     </div>
-                    <div class="mt-4 bg-white px-5 py-3 rounded-2xl text-center text-[12px] font-bold text-slate-600 shadow-sm">
+                    <div class="mt-4 bg-white px-5 py-3 rounded-2xl text-center text-[12px] font-bold text-slate-600 shadow-sm ">
                         Welcome to Riva Care! Let's get you registered.
                     </div>
                 </div>
 
                 <!-- Upcoming Visit Card -->
-                <div class="bg-white rounded-[2rem] p-6 border border-gray-100 shadow-sm">
-                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Upcoming Visit</h4>
+                <div class="bg-white rounded-[2rem] p-6 border border-gray-100 shadow-sm ">
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 ">Upcoming Visit</h4>
                     <!-- تفاصيل الموعد -->
-                    <!-- <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl">
-                        <img src="https://i.pravatar.cc/100?u=doctor" class="w-12 h-12 rounded-xl object-cover">
+                    <!-- <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl ">
+                        <img src="https://i.pravatar.cc/100?u=doctor " class="w-12 h-12 rounded-xl object-cover ">
                         <div>
-                            <h5 class="text-xs font-black text-slate-800">Dr. Michael Chang</h5>
-                            <p class="text-[10px] text-slate-500 mt-0.5">Today, 10:30 AM</p>
+                            <h5 class="text-xs font-black text-slate-800 ">Dr. Michael Chang</h5>
+                            <p class="text-[10px] text-slate-500 mt-0.5 ">Today, 10:30 AM</p>
                         </div>
                     </div> -->
                     <!-- زر الانضمام للمكالمة -->
-                    <!-- <button class="w-full mt-4 bg-[#0052FF] text-white py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100 transition-all active:scale-95">
+                    <!-- <button class="w-full mt-4 bg-[#0052FF] text-white py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100 transition-all active:scale-95 ">
                         Join Call
                     </button> -->
                 </div>
@@ -150,8 +149,8 @@
         </div>
 
         <!-- ===================== Skip Link ===================== -->
-        <div class="text-center mt-12">
-            <a href="#" class="text-[11px] font-black text-blue-600 uppercase tracking-widest hover:underline opacity-60">
+        <div class="text-center mt-12 ">
+            <a href="# " class="text-[11px] font-black text-blue-600 uppercase tracking-widest hover:underline opacity-60 ">
                 Skip for now
             </a>
         </div>

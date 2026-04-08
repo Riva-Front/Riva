@@ -1,38 +1,36 @@
 import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthService, LoginResponse, User } from '../../../../service/auth.service';
-
+import { Router } from '@angular/router';
+import { AuthService } from '../../../../service/auth.service';
 
 @Component({
-  selector: 'app-profile-account',
-  standalone: true,
+  selector: 'app-signup2',
   imports: [CommonModule, FormsModule],
-  templateUrl: './profile-account.component.html',
-  styleUrl: './profile-account.component.css',
+  templateUrl: './signup2.component.html',
+  styleUrl: './signup2.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class ProfileAccountComponent {
+export class Signup2Component {
 
-  // ── بيانات الصورة ──────────────────────────────────────────
   profileImageUrl: string = 'https://ui-avatars.com/api/?name=User&background=E6F0FF&color=2D5BFF';
   selectedFile: File | null = null;
   hasCustomImage: boolean = false;
 
-  // ── بيانات الـ Form ─────────────────────────────────────────
-  hourlyFee: number | null = null;
   gender: string = '';
   description: string = '';
 
-  // ── حالة الـ Loading والـ Error ─────────────────────────────
   isLoading: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
-  router: any;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
-  // ── اختيار الصورة ───────────────────────────────────────────
+  // ✅ method للـ Back button
+  goBack(): void {
+    this.router.navigate(['/signup']);
+  }
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -50,7 +48,6 @@ export class ProfileAccountComponent {
       }
 
       this.selectedFile = file;
-
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
         this.profileImageUrl = e.target?.result as string;
@@ -73,10 +70,8 @@ export class ProfileAccountComponent {
     if (fileInput) fileInput.value = '';
   }
 
-  // ── Submit الـ Form ─────────────────────────────────────────
   onSubmit(): void {
-    // Validation بسيط
-    if (!this.hourlyFee || !this.gender || !this.description.trim()) {
+    if (!this.gender || !this.description.trim()) {
       this.errorMessage = 'Please fill in all required fields.';
       return;
     }
@@ -85,9 +80,7 @@ export class ProfileAccountComponent {
     this.errorMessage = '';
     this.successMessage = '';
 
-    // تجميع الداتا في FormData عشان نبعت الصورة مع باقي البيانات
     const formData = new FormData();
-    formData.append('hourly_fee', this.hourlyFee.toString());
     formData.append('gender', this.gender);
     formData.append('description', this.description);
 
@@ -95,15 +88,12 @@ export class ProfileAccountComponent {
       formData.append('profile_image', this.selectedFile);
     }
 
-    // استخدام الـ token من الـ AuthService
     const token = this.authService.getToken();
 
-    // بعت الداتا للسيرفر
     fetch('http://localhost:8000/api/profile/update', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
-        // ملاحظة: متضيفش Content-Type لأن FormData بتحدده أوتوماتيك
       },
       body: formData,
     })
@@ -114,7 +104,6 @@ export class ProfileAccountComponent {
       .then((data) => {
         this.successMessage = 'Profile updated successfully!';
         console.log('Response:', data);
-        // هنا تقدر تنقل للصفحة التالية لو حبيت
         this.router.navigate(['/signin']);
       })
       .catch((err) => {

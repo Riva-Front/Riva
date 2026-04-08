@@ -1,0 +1,26 @@
+/* @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap');
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:host {
+    font-family: 'DM Sans', sans-serif;
+}
+
+.wrap {
+    background: #f0f6ff;
+    padding: 1.5rem;
+    border-radius: 20px;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 0.5px solid #dce8f8;
+    overflow: hidden;
+}
+
+
+/* TABS */

@@ -4,7 +4,6 @@ import { SigninComponent } from './core/components/auth/signin/signin.component'
 import { ForgetPasswordComponent } from './core/components/auth/forget-password/forget-password.component';
 import { NewPasswordComponent } from './core/components/auth/new-password/new-password.component';
 import { SignupComponent } from './core/components/auth/signup/signup.component';
-import { ProfileAccountComponent } from './core/components/auth/profile-account/profile-account.component';
 import { HomeComponent } from './features/components/home/home.component';
 import { Welcome1Component } from './core/components/auth/welcome1/welcome1.component';
 import { DashboardPComponent } from './core/components/auth/dashboard-p/dashboard-p.component';
@@ -14,6 +13,8 @@ import { ChatComponent } from './core/components/auth/chat/chat.component';
 import { AuthGuard } from './guards/auth-guard';
 import { DashboardComponent } from './core/components/auth/dashboard/dashboard/dashboard.component';
 import { ContactComponent } from './features/components/contact/contact.component';
+import { ProfileComponent } from './core/components/auth/profile/profile.component';
+import { Signup2Component } from './core/components/auth/signup2/signup2.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -22,7 +23,6 @@ export const routes: Routes = [
   { path: 'forget-password', component: ForgetPasswordComponent },
   { path: 'new-password', component: NewPasswordComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'profile-account', component: ProfileAccountComponent },
   { path: 'welcome1', component: Welcome1Component },
   { path: 'dashboard-p', component: DashboardPComponent, canActivate: [AuthGuard] },
   { path: 'add-new-medication', component: AddNewMedicationComponent },
@@ -31,7 +31,8 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }, 
   { path: 'contact', component: ContactComponent },
   {path: 'chat', component: ChatComponent },
-
+  {path: 'myprofile', component: ProfileComponent },
+    {path:'signup2', component: Signup2Component},
   { path: '**', redirectTo: '/home' },
 ];
 
