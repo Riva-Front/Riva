@@ -1,4 +1,3 @@
-// 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -38,8 +37,8 @@ export interface RegisterPayload {
   providedIn: 'root',
 })
 export class AuthService {
-  [x: string]: any;
-  private readonly url = 'http://localhost:8000/api/auth';
+  private readonly authUrl = 'http://localhost:8000/api/auth';
+  private readonly apiUrl  = 'http://localhost:8000/api';
 
   private get isBrowser(): boolean {
     return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
@@ -48,20 +47,36 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   register(payload: RegisterPayload): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.url}/register`, payload);
+    return this.http.post<LoginResponse>(`${this.authUrl}/register`, payload);
   }
 
   login(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.url}/login`, { email, password });
+    return this.http.post<LoginResponse>(`${this.authUrl}/login`, { email, password });
   }
 
   getProfile(): Observable<User> {
     const token = this.getToken();
-    return this.http.get<User>(`${this.url}/me`, {
+    return this.http.get<User>(`${this.apiUrl}/profile`, {
       headers: new HttpHeaders({
         Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
       }),
     });
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<any> {
+    const token = this.getToken();
+    return this.http.put(
+      `${this.apiUrl}/profile/password`, // عدلي حسب endpoint الصحيح على السيرفر
+      { current_password: currentPassword, new_password: newPassword },
+      {
+        headers: new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        }),
+      }
+    );
   }
 
   saveToken(response: LoginResponse): void {

@@ -15,6 +15,7 @@ import { DashboardComponent } from './core/components/auth/dashboard/dashboard/d
 import { ContactComponent } from './features/components/contact/contact.component';
 import { ProfileComponent } from './core/components/auth/profile/profile.component';
 import { Signup2Component } from './core/components/auth/signup2/signup2.component';
+import { BookingComponent } from './core/components/auth/booking/booking.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -33,6 +34,7 @@ export const routes: Routes = [
   {path: 'chat', component: ChatComponent },
   {path: 'myprofile', component: ProfileComponent },
     {path:'signup2', component: Signup2Component},
+    {path:'booking', component: BookingComponent},
   { path: '**', redirectTo: '/home' },
 ];
 

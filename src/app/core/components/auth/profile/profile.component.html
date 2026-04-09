@@ -1,13 +1,19 @@
 <div class="min-h-screen bg-slate-50 flex">
 
     <aside class="fixed left-0 top-0 h-screen w-20 bg-white border-r border-gray-100 hidden md:flex flex-col items-center py-6 gap-8 shadow-sm z-50">
-        <div class="text-blue-600 font-bold text-xl">
+        <div>
             <img src="/Picture1.png" routerLink="/dashboard-p" alt="RIVA Logo" class="w-12 hover:scale-105 transition-transform cursor-pointer">
         </div>
         <div class="flex flex-col gap-6 text-gray-400">
-            <button class="p-2 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all" routerLink="/dashboard"><i class="fas fa-home"></i></button>
-            <button class="p-2 bg-blue-50 text-blue-600 rounded-xl transition-all" routerLink="/myprofil"><i class="fa-solid fa-circle-user"></i></button>
-            <button class="p-2 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all" routerLink="/contact"><i class="fa-solid fa-phone"></i></button>
+            <button class="p-2 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all" routerLink="/dashboard">
+        <i class="fas fa-home"></i>
+      </button>
+            <button class="p-2 bg-blue-50 text-blue-600 rounded-xl transition-all" routerLink="/myprofil">
+        <i class="fa-solid fa-circle-user"></i>
+      </button>
+            <button class="p-2 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all" routerLink="/contact">
+        <i class="fa-solid fa-phone"></i>
+      </button>
         </div>
         <div class="mt-auto">
             <button class="p-2 text-gray-300 hover:text-gray-600"><i class="fas fa-cog"></i></button>
@@ -18,130 +24,182 @@
         <div class="max-w-6xl mx-auto space-y-6">
 
             <div class="flex flex-col gap-1">
-                <h1 class="text-2xl font-black text-slate-800">Account Settings</h1>
+                <h1 class="text-2xl font-black text-slate-800 tracking-tight">Account Settings</h1>
                 <p class="text-sm text-gray-500 font-medium">Manage your personal information and security preferences.</p>
             </div>
 
-            <div class="bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
+            <div *ngIf="isLoading" class="flex items-center justify-center py-20">
+                <div class="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+            </div>
 
-                <div class="flex gap-2 px-8 pt-6 border-b border-gray-50 overflow-x-auto">
-                    <button class="px-6 py-3 text-sm font-bold rounded-t-2xl border-b-2 border-blue-600 text-blue-600 bg-blue-50/50">
-                        Personal Info
-                    </button>
-                    <button class="px-6 py-3 text-sm font-bold text-gray-400 hover:text-blue-500 transition-colors">
-                        Security
-                    </button>
-                    <button class="px-6 py-3 text-sm font-bold text-gray-400 hover:text-blue-500 transition-colors">
-                        Notifications
-                    </button>
-                    <button class="px-6 py-3 text-sm font-bold text-gray-400 hover:text-blue-500 transition-colors">
-                        Medical Records
-                    </button>
-                </div>
-
+            <div *ngIf="!isLoading" class="bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 p-8 md:p-10">
 
                     <div class="lg:col-span-7 space-y-8" [formGroup]="accountForm">
 
-                        <div class="flex items-center gap-6 pb-6 border-b border-gray-50">
-                            <div class="relative group">
-                                <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center font-black text-2xl text-blue-600 shadow-inner">
-                                    {{ accountForm.get('firstName')?.value?.charAt(0) || 'M' }}
+                        <!-- Profile Photo (display only) -->
+                        <div class="flex items-center gap-6">
+                            <div class="relative w-24 h-24">
+                                <img *ngIf="profileImageUrl" [src]="profileImageUrl" class="w-24 h-24 rounded-3xl object-cover shadow-inner border border-gray-100" alt="Profile">
+                                <div *ngIf="!profileImageUrl" class="w-24 h-24 rounded-3xl bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center font-black text-2xl text-blue-600 shadow-inner uppercase">
+                                    {{ firstInitial }}
                                 </div>
-                                <button class="absolute -bottom-2 -right-2 bg-white p-2 rounded-xl shadow-md border border-gray-100 text-blue-500 hover:scale-110 transition-transform">
-                                    <i class="fas fa-camera text-xs"></i>
-                                </button>
                             </div>
                             <div>
-                                <h3 class="text-lg font-black text-slate-800">
-                                    {{ accountForm.get('firstName')?.value }} {{ accountForm.get('lastName')?.value }}
-                                </h3>
-                                <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Patient ID: #RIVA-2024</p>
+                                <p class="font-bold text-slate-700 text-sm">{{ fullName }}</p>
+                                <p class="text-xs text-gray-400 mt-1">{{ accountForm.get('email')?.value }}</p>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Success / Error -->
+                        <div *ngIf="successMessage" class="px-4 py-3 bg-green-50 border border-green-200 rounded-2xl text-green-700 text-sm font-medium">
+                            {{ successMessage }}
+                        </div>
+                        <div *ngIf="errorMessage" class="px-4 py-3 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-medium">
+                            {{ errorMessage }}
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            <!-- First Name -->
                             <div class="space-y-2">
-                                <label for="firstName" class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">First Name</label>
-                                <input id="firstName" type="text" formControlName="firstName" placeholder="First Name" class="w-full px-4 py-3 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium"
-                                />
+                                <label class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">First Name</label>
+                                <input type="text" formControlName="firstName" class="w-full px-4 py-3.5 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium" />
                             </div>
 
+                            <!-- Last Name -->
                             <div class="space-y-2">
-                                <label for="lastName" class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Last Name</label>
-                                <input id="lastName" type="text" formControlName="lastName" placeholder="Last Name" class="w-full px-4 py-3 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium"
-                                />
+                                <label class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Last Name</label>
+                                <input type="text" formControlName="lastName" class="w-full px-4 py-3.5 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium" />
                             </div>
 
+                            <!-- Email (readonly) -->
                             <div class="md:col-span-2 space-y-2">
-                                <label for="email" class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Email Address</label>
-                                <input id="email" type="email" formControlName="email" placeholder="email@example.com" class="w-full px-4 py-3 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium"
-                                />
+                                <label class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Email Address</label>
+                                <input type="ema" formControlName="email" class="w-full px-4 py-3.5 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium" />
+
                             </div>
 
+                            <!-- Phone -->
                             <div class="space-y-2">
-                                <label for="country" class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Country</label>
-                                <div class="relative">
-                                    <select id="country" formControlName="country" class="w-full px-4 py-3 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 outline-none transition-all font-medium appearance-none">
-                                        <option value="Egypt">Egypt</option>
-                                        <option value="UAE">UAE</option>
-                                        <option value="KSA">KSA</option>
-                                    </select>
-                                    <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none text-xs"></i>
+                                <label class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Phone</label>
+                                <input type="text" formControlName="phone" class="w-full px-4 py-3.5 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium" />
+                            </div>
+
+                            <!-- Age -->
+                            <div class="space-y-2">
+                                <label class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Age</label>
+                                <input type="number" formControlName="age" class="w-full px-4 py-3.5 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium" />
+                            </div>
+
+                            <!-- Address -->
+                            <div class="md:col-span-2 space-y-2">
+                                <label class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Address</label>
+                                <input type="text" formControlName="address" class="w-full px-4 py-3.5 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium" />
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="md:col-span-2 space-y-2">
+                                <label class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Gender</label>
+                                <select formControlName="gender" class="w-full px-4 py-3.5 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium">
+                  <option value="">Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+                            </div>
+
+                            <!-- Chronic Conditions -->
+                            <div class="md:col-span-2 space-y-4">
+                                <label class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Medical History</label>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    <label class="flex items-center gap-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:border-blue-300 transition-all">
+                    <input type="checkbox" [(ngModel)]="conditions.diabetes" [ngModelOptions]="{standalone: true}">
+                    <span class="font-semibold text-slate-700 text-sm">Diabetes</span>
+                  </label>
+                                    <label class="flex items-center gap-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:border-blue-300 transition-all">
+                    <input type="checkbox" [(ngModel)]="conditions.hypertension" [ngModelOptions]="{standalone: true}">
+                    <span class="font-semibold text-slate-700 text-sm">Hypertension</span>
+                  </label>
+                                    <label class="flex items-center gap-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl cursor-pointer hover:border-blue-300 transition-all">
+                    <input type="checkbox" [(ngModel)]="conditions.cancer" [ngModelOptions]="{standalone: true}">
+                    <span class="font-semibold text-slate-700 text-sm">Cancer</span>
+                  </label>
                                 </div>
+
+                                <!-- Selected conditions tags -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3" *ngIf="selectedConditions.length > 0">
+                                    <div *ngFor="let condition of selectedConditions" class="group relative flex items-center justify-between p-3 bg-white border border-slate-200 hover:border-blue-300 rounded-2xl transition-all duration-300 shadow-sm overflow-hidden">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                                <i class="fas fa-notes-medical text-xs"></i>
+                                            </div>
+                                            <span class="text-xs font-bold text-slate-700">{{ condition }}</span>
+                                        </div>
+                                        <button type="button" (click)="removeCondition(condition)" class="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-50 hover:text-red-500 text-gray-400 rounded-lg transition-all">
+                      <i class="fas fa-times-circle text-[12px]"></i>
+                    </button>
+                                        <div class="absolute bottom-0 left-0 w-full h-1 bg-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Add custom condition -->
+                                <div class="relative group">
+                                    <input type="text" (keydown.enter)="addCondition($event)" placeholder="Type a condition and press Enter..." class="w-full pl-12 pr-4 py-4 bg-slate-100/50 border-2 border-transparent focus:border-blue-400 focus:bg-white rounded-2xl outline-none transition-all font-medium text-sm text-slate-700"
+                                    />
+                                    <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </div>
+                                </div>
+                                <p class="text-[10px] text-gray-400 ml-2 font-medium">Examples: Asthma, Diabetes, Hypertension.</p>
                             </div>
 
-                            <div class="space-y-2">
-                                <label for="phone" class="text-[11px] uppercase text-gray-400 font-black tracking-widest ml-1">Phone Number</label>
-                                <input id="phone" type="text" formControlName="phone" placeholder="+20 123..." class="w-full px-4 py-3 bg-slate-50 border border-gray-100 rounded-2xl focus:bg-white focus:ring-4 focus:ring-blue-50 focus:border-blue-400 outline-none transition-all font-medium"
-                                />
-                            </div>
                         </div>
 
+                        <!-- Save Button -->
                         <div class="flex gap-4 pt-4">
-                            <button (click)="onSave()" class="px-10 py-4 bg-slate-900 hover:bg-black text-white text-sm font-black rounded-2xl transition-all shadow-lg shadow-slate-200 active:scale-95">
-                                Save Changes
-                            </button>
-                            <button (click)="accountForm.reset()" class="px-8 py-4 border border-gray-200 text-gray-500 text-sm font-black rounded-2xl hover:bg-gray-50 transition-all">
-                                Cancel
-                            </button>
+                            <button (click)="onSave()" [disabled]="isSaving" class="px-10 py-4 bg-slate-900 hover:bg-black disabled:bg-slate-400 text-white text-sm font-black rounded-2xl transition-all shadow-lg shadow-slate-200 active:scale-95 flex items-center gap-2">
+                <span *ngIf="isSaving" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                {{ isSaving ? 'Saving...' : 'Save Changes' }}
+              </button>
+                            <button type="button" (click)="loadProfile()" class="px-8 py-4 border border-gray-200 text-gray-500 text-sm font-black rounded-2xl hover:bg-gray-50 transition-all">
+                Cancel
+              </button>
                         </div>
+
                     </div>
 
-                    <div class="lg:col-span-5" [formGroup]="passwordForm">
+                    <!-- Security -->
+                    <div class="lg:col-span-5">
                         <div class="bg-blue-50/50 border border-blue-100 rounded-[32px] p-8 space-y-6">
-                            <div class="flex items-center gap-3 mb-2">
+                            <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-100">
                                     <i class="fas fa-shield-alt"></i>
                                 </div>
-                                <h3 class="font-black text-slate-800 tracking-tight">Security Settings</h3>
+                                <h3 class="font-black text-slate-800 tracking-tight text-base">Security Settings</h3>
                             </div>
 
-                            <div class="space-y-4">
+                            <div [formGroup]="passwordForm" class="space-y-4 pt-2">
                                 <div class="space-y-1">
-                                    <label for="currentPassword" class="text-[10px] uppercase text-blue-600 font-black tracking-widest ml-1">Current Password</label>
-                                    <input id="currentPassword" type="password" formControlName="currentPassword" class="w-full px-4 py-3 bg-white border border-blue-100 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none transition-all font-medium" />
+                                    <label class="text-[10px] uppercase text-blue-600 font-black tracking-widest ml-1">Current Password</label>
+                                    <input type="password" formControlName="currentPassword" class="w-full px-4 py-3 bg-white border border-blue-100 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none transition-all" />
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[10px] uppercase text-blue-600 font-black tracking-widest ml-1">New Password</label>
+                                    <input type="password" formControlName="newPassword" class="w-full px-4 py-3 bg-white border border-blue-100 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none transition-all" />
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[10px] uppercase text-blue-600 font-black tracking-widest ml-1">Confirm Password</label>
+                                    <input type="password" formControlName="confirmPassword" class="w-full px-4 py-3 bg-white border border-blue-100 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none transition-all" />
                                 </div>
 
-                                <div class="space-y-1">
-                                    <label for="newPassword" class="text-[10px] uppercase text-blue-600 font-black tracking-widest ml-1">New Password</label>
-                                    <input id="newPassword" type="password" formControlName="newPassword" class="w-full px-4 py-3 bg-white border border-blue-100 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none transition-all font-medium" />
-                                </div>
+                                <div *ngIf="passwordSuccess" class="text-green-600 text-sm font-medium">{{ passwordSuccess }}</div>
+                                <div *ngIf="passwordError" class="text-red-500 text-sm font-medium">{{ passwordError }}</div>
 
-                                <div class="space-y-1">
-                                    <label for="confirmPassword" class="text-[10px] uppercase text-blue-600 font-black tracking-widest ml-1">Confirm Password</label>
-                                    <input id="confirmPassword" type="password" formControlName="confirmPassword" class="w-full px-4 py-3 bg-white border border-blue-100 rounded-xl focus:ring-4 focus:ring-blue-100 outline-none transition-all font-medium" />
-                                </div>
-                            </div>
-
-                            <button (click)="onForgotPassword()" class="text-xs text-blue-600 font-bold hover:underline">
-                                Forgot your password?
-                            </button>
-
-                            <div class="pt-2">
-                                <button (click)="onSavePassword()" [disabled]="passwordForm.invalid" class="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded-2xl font-black text-sm shadow-xl shadow-blue-100 transition-all active:scale-[0.98]">
-                                    Update Password
-                                </button>
+                                <button [disabled]="isSavingPassword" (click)="onSavePassword()" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black text-sm transition-all shadow-xl shadow-blue-100">
+                  {{ isSavingPassword ? 'Updating...' : 'Update Password' }}
+                </button>
                             </div>
                         </div>
                     </div>

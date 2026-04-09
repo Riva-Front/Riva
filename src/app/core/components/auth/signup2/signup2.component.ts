@@ -6,6 +6,7 @@ import { AuthService } from '../../../../service/auth.service';
 
 @Component({
   selector: 'app-signup2',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './signup2.component.html',
   styleUrl: './signup2.component.css',
@@ -19,6 +20,15 @@ export class Signup2Component {
 
   gender: string = '';
   description: string = '';
+  // المتغيرات الجديدة
+  age: number | null = null;
+  address: string = '';
+
+  conditions = {
+    diabetes: false,
+    hypertension: false,
+    cancer: false,
+  };
 
   isLoading: boolean = false;
   errorMessage: string = '';
@@ -26,13 +36,13 @@ export class Signup2Component {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  // ✅ method للـ Back button
   goBack(): void {
     this.router.navigate(['/signup']);
   }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
+
     if (input.files && input.files[0]) {
       const file = input.files[0];
 
@@ -41,17 +51,21 @@ export class Signup2Component {
         return;
       }
 
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
       if (!allowedTypes.includes(file.type)) {
-        alert('Only JPG, GIF, or PNG files are allowed.');
+        alert('Only JPG, PNG, or GIF files are allowed.');
         return;
       }
 
       this.selectedFile = file;
+
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.profileImageUrl = e.target?.result as string;
+        const base64 = e.target?.result as string;
+        this.profileImageUrl = base64;
         this.hasCustomImage = true;
+
+        localStorage.setItem('profileImage', base64);
       };
       reader.readAsDataURL(file);
     }
@@ -66,12 +80,26 @@ export class Signup2Component {
     this.profileImageUrl = 'https://ui-avatars.com/api/?name=User&background=E6F0FF&color=2D5BFF';
     this.selectedFile = null;
     this.hasCustomImage = false;
+
+    localStorage.removeItem('profileImage');
+
     const fileInput = document.getElementById('profilePhotoInput') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   }
 
+  get selectedConditionsArray(): string[] {
+    return Object.entries(this.conditions)
+      .filter(([_, value]) => value)
+      .map(([key]) => key);
+  }
+
+  get selectedConditionsText(): string {
+    return this.selectedConditionsArray.join(', ');
+  }
+
   onSubmit(): void {
-    if (!this.gender || !this.description.trim()) {
+    // تحديث التحقق ليشمل الحقول الجديدة إذا كانت مطلوبة
+    if (!this.gender || !this.description.trim() || !this.age || !this.address.trim()) {
       this.errorMessage = 'Please fill in all required fields.';
       return;
     }
@@ -80,31 +108,41 @@ export class Signup2Component {
     this.errorMessage = '';
     this.successMessage = '';
 
-    const formData = new FormData();
-    formData.append('gender', this.gender);
-    formData.append('description', this.description);
-
-    if (this.selectedFile) {
-      formData.append('profile_image', this.selectedFile);
-    }
-
     const token = this.authService.getToken();
 
-    fetch('http://localhost:8000/api/profile/update', {
-      method: 'POST',
+    const body = {
+      gender: this.gender,
+      about: this.description,
+      medical_history: this.selectedConditionsText,
+      age: this.age,       // إضافة العمر للـ Body
+      address: this.address // إضافة العنوان للـ Body
+    };
+
+    console.log('SIGNUP2 BODY SENT:', body);
+
+    fetch('http://localhost:8000/api/profile', {
+      method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-      body: formData,
+      body: JSON.stringify(body),
     })
-      .then((res) => {
-        if (!res.ok) throw new Error('Server error: ' + res.status);
-        return res.json();
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          console.error('SERVER ERROR:', data);
+          throw new Error(data.message || 'Server error: ' + res.status);
+        }
+        return data;
       })
       .then((data) => {
+        console.log('SIGNUP2 RESPONSE:', data);
         this.successMessage = 'Profile updated successfully!';
-        console.log('Response:', data);
-        this.router.navigate(['/signin']);
+        setTimeout(() => {
+          this.router.navigate(['/signin']);
+        }, 1000);
       })
       .catch((err) => {
         this.errorMessage = 'Something went wrong. Please try again.';

@@ -17,17 +17,21 @@ export class SignupComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      first_name: ['', [Validators.required, Validators.minLength(2)]],
-      last_name: ['', [Validators.required, Validators.minLength(2)]],
-      phone: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      first_name:            ['', [Validators.required, Validators.minLength(2)]],
+      last_name:             ['', [Validators.required, Validators.minLength(2)]],
+      phone:                 ['', [Validators.required]],
+      email:                 ['', [Validators.required, Validators.email]],
+      password:              ['', [Validators.required, Validators.minLength(8)]],
       password_confirmation: ['', [Validators.required]],
-      role: ['patient', [Validators.required]],
+      role:                  ['patient', [Validators.required]],
     });
   }
 
@@ -44,7 +48,7 @@ export class SignupComponent implements OnInit {
       next: (res: LoginResponse) => {
         this.errorMessage = '';
         this.successMessage = 'Registration successful! Redirecting...';
-        // ✅ مش بنحفظ token هنا — بنروح signin عشان يسجل دخول
+        this.authService.saveToken(res); // ✅ حفظ الـ token عشان signup2 تقدر تستخدمه
         this.router.navigate(['/signup2']);
       },
       error: (err) => {

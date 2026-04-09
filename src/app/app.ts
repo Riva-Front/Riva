@@ -132,7 +132,8 @@ export class App implements OnInit {
       'dashboard',
       'contact',
       'myprofile',
-      'signup2'
+      'signup2',
+      'booking'
     ];
     return authRoutes.some(route => this.router.url.includes(route));
   }

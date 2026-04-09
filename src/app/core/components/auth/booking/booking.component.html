@@ -1,0 +1,156 @@
+<div class="min-h-screen bg-slate-50 font-sans">
+    <main class="max-w-5xl mx-auto p-4 md:p-8">
+        <div class="space-y-8">
+
+            <!-- Title -->
+            <div class="text-center space-y-1">
+                <h1 class="text-2xl font-bold text-slate-900">Book New Consultation</h1>
+                <p class="text-sm text-slate-400">Complete the following steps to confirm your appointment.</p>
+            </div>
+
+            <!-- Stepper -->
+            <div class="max-w-md mx-auto py-4 relative">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-slate-100"></div>
+                </div>
+                <div class="relative flex justify-between">
+                    <div class="flex flex-col items-center gap-2">
+                        <span class="h-10 w-10 flex items-center justify-center rounded-full font-bold text-sm bg-blue-600 text-white ring-4 ring-blue-100 shadow-md">1</span>
+                        <span class="text-xs font-bold text-slate-800">Appointment</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <span class="h-10 w-10 flex items-center justify-center rounded-full font-bold text-sm bg-white border-2 border-slate-100 text-slate-300">2</span>
+                        <span class="text-xs font-semibold text-slate-400">Payment</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2">
+                        <span class="h-10 w-10 flex items-center justify-center rounded-full font-bold text-sm bg-white border-2 border-slate-100 text-slate-300">3</span>
+                        <span class="text-xs font-semibold text-slate-400">Confirmation</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6 items-start">
+
+                <!-- Left Card -->
+                <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-10 space-y-8">
+
+                    <!-- Consultation Type -->
+                    <div class="space-y-3">
+                        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fas fa-desktop text-blue-500 text-xs"></i> Consultation Type
+                        </h2>
+                        <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-sm text-slate-800">Online Consultation (Telehealth)</h3>
+                                <p class="text-xs text-blue-400 mt-1">Duration: 30 minutes</p>
+                            </div>
+                            <span class="text-lg font-black text-blue-600">300 DZ</span>
+                        </div>
+                    </div>
+
+                    <!-- Select Date -->
+                    <div class="space-y-3">
+                        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fas fa-calendar-alt text-blue-500 text-xs"></i> Select Date
+                        </h2>
+                        <div class="border border-slate-100 rounded-2xl p-5 max-w-sm">
+                            <!-- Calendar Header -->
+                            <div class="flex justify-between items-center mb-5">
+                                <button (click)="prevMonth()" class="text-slate-300 hover:text-slate-500 transition-colors px-2">
+                  <i class="fas fa-chevron-left text-xs"></i>
+                </button>
+                                <span class="font-bold text-sm text-slate-800">{{ currentMonthLabel }}</span>
+                                <button (click)="nextMonth()" class="text-slate-300 hover:text-slate-500 transition-colors px-2">
+                  <i class="fas fa-chevron-right text-xs"></i>
+                </button>
+                            </div>
+                            <!-- Day Names -->
+                            <div class="grid grid-cols-7 text-center text-[10px] font-bold text-slate-400 uppercase mb-3">
+                                <div *ngFor="let d of dayNames">{{ d }}</div>
+                            </div>
+                            <!-- Days Grid -->
+                            <div class="grid grid-cols-7 text-center gap-0.5">
+                                <div *ngFor="let day of calendarDays" (click)="selectDay(day)" [ngClass]="{
+                    'bg-blue-600 text-white ring-4 ring-blue-50 shadow': day.selected,
+                    'text-slate-300': day.other,
+                    'border border-blue-500 text-blue-600': day.isToday && !day.selected,
+                    'hover:bg-blue-50 hover:text-blue-600 cursor-pointer': !day.other
+                  }" class="text-xs font-semibold p-2 rounded-full transition-colors aspect-square flex items-center justify-center">
+                                    {{ day.number }}
+                                </div>
+                            </div>
+                            <!-- Calendar Footer -->
+                            <div class="flex gap-2 justify-end mt-4">
+                                <button (click)="goToToday()" class="text-xs px-4 py-2 border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50 transition-colors">Today</button>
+                                <button class="text-xs px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Available Times -->
+                    <div class="pt-4 border-t border-slate-50 space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-sm font-bold text-slate-900">Available Times</h3>
+                            <span class="text-sm font-semibold text-blue-600">{{ selectedDateLabel }}</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button *ngFor="let slot of timeSlots" (click)="!slot.disabled && selectTime(slot.time)" [disabled]="slot.disabled" [ngClass]="{
+                  'bg-blue-50 border-blue-600 text-blue-600 ring-2 ring-blue-100': selectedTime === slot.time,
+                  'opacity-40 cursor-not-allowed bg-slate-50': slot.disabled,
+                  'hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50': !slot.disabled
+                }" class="px-4 py-2.5 border border-slate-100 rounded-xl text-xs font-bold text-slate-600 transition-all">
+                {{ slot.time }}
+              </button>
+                        </div>
+                    </div>
+
+                    <!-- Additional Details -->
+                    <div class="pt-4 border-t border-slate-50 space-y-4">
+                        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fas fa-file-alt text-blue-500 text-xs"></i> Additional Details
+                        </h2>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-600">Notes (Optional)</label>
+                            <textarea rows="4" [(ngModel)]="notes" name="notes" placeholder="Write any details or symptoms..." class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-100 text-sm resize-none transition-all"></textarea>
+                        </div>
+                        <div class="border-2 border-dashed border-slate-200 bg-slate-50 rounded-2xl p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all group">
+                            <i class="fas fa-cloud-upload-alt text-2xl text-slate-300 mb-2 group-hover:text-blue-500 transition-colors block"></i>
+                            <p class="text-xs font-bold text-slate-600">Click or drag files to upload</p>
+                            <span class="text-[10px] text-slate-400 mt-1 block">PDF, JPG, PNG (Max 2MB)</span>
+                        </div>
+                    </div>
+
+                    <!-- Next Button -->
+                    <div class="flex justify-end pt-4 border-t border-slate-50">
+                        <button (click)="nextStep()" class="px-8 py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all active:scale-95 flex items-center gap-2">
+              Next Step
+              <i class="fas fa-chevron-right text-xs"></i>
+            </button>
+                    </div>
+
+                </div>
+
+                <!-- Doctor Aside -->
+                <aside class="space-y-4">
+                    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 text-center space-y-4">
+                        <img src="https://i.pravatar.cc/150?u=dr_sami" class="w-20 h-20 rounded-full mx-auto border-4 border-slate-50 shadow-sm object-cover" alt="Doctor">
+                        <div>
+                            <h3 class="text-base font-black text-slate-900">Dr. Sami Amin</h3>
+                            <span class="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full inline-block mt-2">
+                Specialist Consultant
+              </span>
+                        </div>
+                        <p class="text-xs text-slate-500 leading-relaxed text-left">
+                            Specialist with 15+ years of experience in diagnosing and treating chronic diseases and providing personalized patient care.
+                        </p>
+                        <button class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-black transition-all">
+              View Full Profile
+            </button>
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+    </main>
+</div>
