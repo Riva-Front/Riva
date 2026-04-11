@@ -26,7 +26,6 @@ export class ProfileComponent implements OnInit {
   passwordError = '';
   profileImageUrl: string = '';
 
-  // ✅ ضيفنا activeTab
   activeTab: 'personal' | 'security' | 'notifications' | 'medical' = 'personal';
 
   conditions = {
@@ -121,7 +120,6 @@ export class ProfileComponent implements OnInit {
             return lower !== 'diabetes' && lower !== 'hypertension' && lower !== 'cancer';
           });
 
-          // ✅ الصورة من localStorage
           const savedImage = localStorage.getItem('profileImage');
           this.profileImageUrl =
             savedImage ||
@@ -287,69 +285,45 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-onSavePassword(): void {
-  if (this.passwordForm.invalid) {
-    this.passwordForm.markAllAsTouched();
-    this.passwordError = 'Please fill in all password fields.';
-    return;
-  }
+  // ✅ التعديل الوحيد - بنستخدم authService.changePassword
+  onSavePassword(): void {
+    if (this.passwordForm.invalid) {
+      this.passwordForm.markAllAsTouched();
+      this.passwordError = 'Please fill in all password fields.';
+      return;
+    }
 
-  const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
-  if (newPassword !== confirmPassword) {
-    this.passwordError = 'Passwords do not match.';
-    return;
-  }
+    const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
 
-  this.isSavingPassword = true;
-  this.passwordError = '';
-  this.passwordSuccess = '';
+    if (newPassword !== confirmPassword) {
+      this.passwordError = 'Passwords do not match.';
+      return;
+    }
 
-  const token = this.authService.getToken();
+    this.isSavingPassword = true;
+    this.passwordError = '';
+    this.passwordSuccess = '';
 
-  const body = {
-    current_password: currentPassword,
-    new_password: newPassword,
-  };
-fetch('http://localhost:8000/api/profile/password', {
-  method: 'PUT',
-  headers: {
-    Authorization: `Bearer ${token}`,
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    current_password: currentPassword,
-    new_password: newPassword,
-  }),
-})
-    .then(async res => {
-      const data = await res.json();
-      if (!res.ok) {
-        // 🛑 عرض رسالة الخطأ الحقيقية من السيرفر
-        const msg = data.message || JSON.stringify(data);
-        console.error('PASSWORD UPDATE ERROR:', msg);
-        throw new Error(msg);
+    this.authService.changePassword(currentPassword, newPassword).subscribe({
+      next: (data) => {
+        this.zone.run(() => {
+          console.log('PASSWORD UPDATE RESPONSE:', data);
+          this.passwordSuccess = '✅ Password updated successfully!';
+          this.isSavingPassword = false;
+          this.passwordForm.reset();
+          this.cdr.detectChanges();
+        });
+      },
+      error: (err) => {
+        this.zone.run(() => {
+          console.error('PASSWORD UPDATE ERROR:', err);
+          this.passwordError = `❌ ${err?.error?.message || 'Failed to update password. Please try again.'}`;
+          this.isSavingPassword = false;
+          this.cdr.detectChanges();
+        });
       }
-      return data;
-    })
-    .then((data) => {
-      this.zone.run(() => {
-        this.passwordSuccess = '✅ Password updated successfully!';
-        this.isSavingPassword = false;
-        this.passwordForm.reset();
-        this.cdr.detectChanges();
-      });
-    })
-    .catch(err => {
-      this.zone.run(() => {
-        console.error('Password update failed:', err);
-        // 📝 هنا هنعرض رسالة السيرفر الفعلية بدل الرسالة العامة
-        this.passwordError = `❌ ${err.message || 'Failed to update password. Please try again.'}`;
-        this.isSavingPassword = false;
-        this.cdr.detectChanges();
-      });
     });
-}
+  }
 
   onForgotPassword(): void {
     alert('A password reset link will be sent to: ' + this.accountForm.value.email);

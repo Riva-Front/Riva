@@ -2,12 +2,9 @@
 
     <!-- ===================== SIDEBAR للشاشات الكبيرة ===================== -->
     <aside class="fixed left-0 top-0 h-screen w-20 bg-white border-r border-gray-200 hidden md:flex flex-col items-center py-6 gap-8 shadow-sm z-50">
-        <!-- شعار الموقع -->
         <div class="text-blue-600 font-bold text-xl">
             <img src="/Picture1.png" routerLink="/dashboard-p" alt="RIVA Logo" class="w-12">
         </div>
-
-        <!-- أيقونات التنقل الرئيسية -->
         <div class="flex flex-col gap-6 text-gray-400">
             <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/dashboard-p">
                 <i class="fas fa-home"></i>
@@ -15,30 +12,22 @@
             <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/add-new-medication">
                 <i class="fas fa-pills"></i>
             </button>
-            <!-- <button class="p-2 hover:text-blue-600 transition-colors">
-                <i class="fas fa-user"></i>
-            </button> -->
-            <!-- <button class="p-2 hover:text-blue-600 transition-colors">
-                <i class="fas fa-phone"></i>
-            </button> -->
             <button class="p-2 bg-blue-50 text-blue-600 rounded-lg" routerLink="/doctor-cards">
                 <i class="fa-solid fa-user-doctor"></i>
             </button>
-            <button class="p-2 hover:text-blue-600" routerLink="/chat"><i class="fa-brands fa-rocketchat"></i></button>
-
-        </div>
-
-        <!-- أيقونة الإعدادات أسفل الشريط -->
-        <div class="mt-auto">
-            <button class="p-2 text-gray-400 hover:text-gray-600">
-                <i class="fas fa-cog"></i>
+            <button class="p-2 hover:text-blue-600" routerLink="/chat">
+                <i class="fa-brands fa-rocketchat"></i>
             </button>
+            <button class="p-2 hover:text-blue-600" routerLink="/booking"><i class="fa-solid fa-calendar"></i></button>
+            <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/myprofile"><i class="fa-solid fa-circle-user"></i></button>
+
+
         </div>
+
     </aside>
 
     <!-- ===================== BOTTOM NAVIGATION للشاشات الصغيرة ===================== -->
     <nav class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-gray-100 flex justify-around items-center py-3 z-50 md:hidden shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
-        <!-- أيقونات التنقل للشاشات الصغيرة -->
         <button class="flex flex-col items-center gap-1 text-gray-400" routerLink="/dashboard-p">
             <i class="fas fa-home text-lg"></i>
             <span class="text-[10px] font-bold">Home</span>
@@ -51,97 +40,109 @@
             <i class="fa-solid fa-user-doctor text-lg"></i>
             <span class="text-[10px] font-bold">Doctors</span>
         </button>
-        <button class="flex flex-col items-center gap-1 text-gray-400 " routerLink="/chat"> <i class="fa-brands fa-rocketchat"></i>
-            <span class=" text-[10px] font-bold ">Chat</span>
+        <button class="flex flex-col items-center gap-1 text-gray-400" routerLink="/chat">
+            <i class="fa-brands fa-rocketchat"></i>
+            <span class="text-[10px] font-bold">Chat</span>
         </button>
     </nav>
 
     <!-- ===================== MAIN CONTENT ===================== -->
-    <main class="p-6 md:p-10 bg-gradient-to-br from-white to-[#F9FBFF] min-h-screen ">
+    <main class="p-6 md:p-10 bg-gradient-to-br from-white to-[#F9FBFF] min-h-screen">
 
         <!-- ===================== Page Title ===================== -->
-        <div class="text-center mb-10 md:mb-12 ">
-            <h1 class="text-3xl md:text-4xl font-black text-slate-800 leading-tight ">
-                Choose who will follow your <span class="text-[#00D1B2] ">health</span>
+        <div class="text-center mb-10 md:mb-12">
+            <h1 class="text-3xl md:text-4xl font-black text-slate-800 leading-tight">
+                Choose who will follow your <span class="text-[#00D1B2]">health</span>
             </h1>
-            <p class="text-slate-400 text-sm mt-3 ">
+            <p class="text-slate-400 text-sm mt-3">
                 You can change this later at any time
             </p>
         </div>
 
         <!-- ===================== GRID CONTENT ===================== -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-[1400px] mx-auto ">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-[1400px] mx-auto">
 
             <!-- ===================== DOCTORS LIST ===================== -->
-            <div class="order-2 lg:order-1 lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6 items-start ">
+            <div class="order-2 lg:order-1 lg:col-span-8">
 
-                <!-- Doctor Card 1 -->
-                <div class="bg-white border border-gray-100 p-6 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center w-full h-fit ">
-                    <!-- صورة الدكتور + التقييم -->
-                    <div class="relative mb-4 ">
-                        <img src="https://i.pravatar.cc/150?u=james " class="w-20 h-20 rounded-2xl object-cover grayscale hover:grayscale-0 transition-all ">
-                        <span class="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm ">★ 4.8</span>
+                <!-- Loading State -->
+                <div *ngIf="isLoading" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div *ngFor="let i of [1,2,3,4]" class="bg-white border border-gray-100 p-6 rounded-[2.5rem] shadow-sm flex flex-col items-center text-center animate-pulse">
+                        <div class="w-20 h-20 rounded-2xl bg-slate-200 mb-4"></div>
+                        <div class="h-4 bg-slate-200 rounded w-32 mb-2"></div>
+                        <div class="h-3 bg-slate-100 rounded w-24 mb-3"></div>
+                        <div class="h-3 bg-slate-100 rounded w-full mb-2"></div>
+                        <div class="h-3 bg-slate-100 rounded w-3/4 mb-6"></div>
+                        <div class="h-10 bg-slate-200 rounded-xl w-full"></div>
                     </div>
-                    <!-- اسم وتخصص -->
-                    <h3 class="font-bold text-base text-slate-800 tracking-tight ">Dr. James Wilson</h3>
-                    <p class="text-[10px] text-blue-500 font-black uppercase tracking-wider mt-1 mb-3 ">General Practice</p>
-                    <!-- وصف مختصر -->
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6 line-clamp-2 px-2 ">Board certified family physician with 12 years of experience...</p>
-                    <!-- زر الاختيار -->
-                    <button class="w-full bg-[#0052FF] hover:bg-blue-700 text-white py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all active:scale-95 ">
-                        Select Doctor
+                </div>
+
+                <!-- Error State -->
+                <div *ngIf="!isLoading && errorMessage" class="flex flex-col items-center justify-center py-20 text-center">
+                    <i class="fas fa-exclamation-circle text-4xl text-red-300 mb-4"></i>
+                    <p class="text-slate-500 font-semibold">{{ errorMessage }}</p>
+                    <button (click)="ngOnInit()" class="mt-4 px-6 py-2 bg-[#0052FF] text-white text-xs font-black uppercase tracking-widest rounded-xl">
+                        Try Again
                     </button>
                 </div>
 
-                <!-- Doctor Card 2 -->
-                <div class="bg-white border border-gray-100 p-6 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center w-full h-fit ">
-                    <!-- صورة الدكتور + التقييم -->
-                    <div class="relative mb-4 ">
-                        <img src="https://i.pravatar.cc/150?u=sarah " class="w-20 h-20 rounded-2xl object-cover grayscale hover:grayscale-0 transition-all ">
-                        <span class="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm ">★ 4.9</span>
-                    </div>
-                    <!-- اسم وتخصص -->
-                    <h3 class="font-bold text-base text-slate-800 tracking-tight ">Dr. Sarah Chen</h3>
-                    <p class="text-[10px] text-blue-500 font-black uppercase tracking-wider mt-1 mb-3 ">Cardiologist</p>
-                    <!-- وصف مختصر -->
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6 line-clamp-2 px-2 ">15+ years experience in cardiovascular medicine...</p>
-                    <!-- زر الاختيار -->
-                    <button class="w-full bg-[#0052FF] hover:bg-blue-700 text-white py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all active:scale-95 ">
-                        Select Doctor
-                    </button>
+                <!-- Empty State -->
+                <div *ngIf="!isLoading && !errorMessage && doctors.length === 0" class="flex flex-col items-center justify-center py-20 text-center">
+                    <i class="fa-solid fa-user-doctor text-5xl text-slate-200 mb-4"></i>
+                    <p class="text-slate-400 font-semibold">No doctors available at the moment.</p>
                 </div>
 
+                <!-- Doctors Grid -->
+                <div *ngIf="!isLoading && doctors.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+
+                    <div *ngFor="let doctor of doctors" class="bg-white border border-gray-100 p-6 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all flex flex-col items-center text-center w-full h-fit">
+
+                        <!-- صورة الدكتور + التقييم -->
+                        <div class="relative mb-4">
+                            <img [src]="getAvatarUrl(doctor)" [alt]="getDoctorName(doctor)" class="w-20 h-20 rounded-2xl object-cover grayscale hover:grayscale-0 transition-all">
+                            <span *ngIf="getRating(doctor)" class="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-black px-2 py-0.5 rounded-full shadow-sm">
+                                ★ {{ getRating(doctor) }}
+                            </span>
+                        </div>
+
+                        <!-- اسم وتخصص -->
+                        <h3 class="font-bold text-base text-slate-800 tracking-tight">
+                            Dr. {{ getDoctorName(doctor) }}
+                        </h3>
+                        <p class="text-[10px] text-blue-500 font-black uppercase tracking-wider mt-1 mb-3">
+                            {{ getSpecialty(doctor) }}
+                        </p>
+
+                        <!-- وصف مختصر -->
+                        <p class="text-xs text-slate-500 leading-relaxed mb-6 line-clamp-2 px-2">
+                            {{ getBio(doctor) }}
+                        </p>
+
+                        <!-- زر الاختيار -->
+                        <button (click)="selectDoctor(doctor)" class="w-full bg-[#0052FF] hover:bg-blue-700 text-white py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all active:scale-95">
+  Select Doctor
+</button> </div>
+
+                </div>
             </div>
 
             <!-- ===================== RIGHT SIDE (Riva + Upcoming Visit) ===================== -->
-            <div class="order-1 lg:order-2 lg:col-span-4 space-y-6 ">
+            <div class="order-1 lg:order-2 lg:col-span-4 space-y-6">
 
                 <!-- Riva 3D Card -->
-                <div class="bg-[#EEF2FF] rounded-[2.5rem] p-6 flex flex-col items-center border border-blue-50 ">
-                    <div class="w-48 h-48 md:w-64 md:h-64 ">
-                        <spline-viewer url="https://prod.spline.design/RfqAjOnSviCEEX3U/scene.splinecode " style="width:100%; height:100%; transform: rotateY(180deg); ">
+                <div class="bg-[#EEF2FF] rounded-[2.5rem] p-6 flex flex-col items-center border border-blue-50">
+                    <div class="w-48 h-48 md:w-64 md:h-64">
+                        <spline-viewer url="https://prod.spline.design/RfqAjOnSviCEEX3U/scene.splinecode" style="width:100%; height:100%; transform: rotateY(180deg);">
                         </spline-viewer>
                     </div>
-                    <div class="mt-4 bg-white px-5 py-3 rounded-2xl text-center text-[12px] font-bold text-slate-600 shadow-sm ">
+                    <div class="mt-4 bg-white px-5 py-3 rounded-2xl text-center text-[12px] font-bold text-slate-600 shadow-sm">
                         Welcome to Riva Care! Let's get you registered.
                     </div>
                 </div>
 
                 <!-- Upcoming Visit Card -->
-                <div class="bg-white rounded-[2rem] p-6 border border-gray-100 shadow-sm ">
-                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 ">Upcoming Visit</h4>
-                    <!-- تفاصيل الموعد -->
-                    <!-- <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl ">
-                        <img src="https://i.pravatar.cc/100?u=doctor " class="w-12 h-12 rounded-xl object-cover ">
-                        <div>
-                            <h5 class="text-xs font-black text-slate-800 ">Dr. Michael Chang</h5>
-                            <p class="text-[10px] text-slate-500 mt-0.5 ">Today, 10:30 AM</p>
-                        </div>
-                    </div> -->
-                    <!-- زر الانضمام للمكالمة -->
-                    <!-- <button class="w-full mt-4 bg-[#0052FF] text-white py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100 transition-all active:scale-95 ">
-                        Join Call
-                    </button> -->
+                <div class="bg-white rounded-[2rem] p-6 border border-gray-100 shadow-sm">
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Upcoming Visit</h4>
                 </div>
 
             </div>
@@ -149,8 +150,8 @@
         </div>
 
         <!-- ===================== Skip Link ===================== -->
-        <div class="text-center mt-12 ">
-            <a href="# " class="text-[11px] font-black text-blue-600 uppercase tracking-widest hover:underline opacity-60 ">
+        <div class="text-center mt-12">
+            <a href="#" class="text-[11px] font-black text-blue-600 uppercase tracking-widest hover:underline opacity-60">
                 Skip for now
             </a>
         </div>

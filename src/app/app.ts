@@ -133,7 +133,8 @@ export class App implements OnInit {
       'contact',
       'myprofile',
       'signup2',
-      'booking'
+      'booking',
+      'patient-cards'
     ];
     return authRoutes.some(route => this.router.url.includes(route));
   }

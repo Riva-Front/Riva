@@ -16,6 +16,7 @@ import { ContactComponent } from './features/components/contact/contact.componen
 import { ProfileComponent } from './core/components/auth/profile/profile.component';
 import { Signup2Component } from './core/components/auth/signup2/signup2.component';
 import { BookingComponent } from './core/components/auth/booking/booking.component';
+import { PatientCardsComponent } from './core/components/auth/patient-cards/patient-cards.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -24,17 +25,18 @@ export const routes: Routes = [
   { path: 'forget-password', component: ForgetPasswordComponent },
   { path: 'new-password', component: NewPasswordComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'welcome1', component: Welcome1Component },
+  { path: 'welcome1', component: Welcome1Component, canActivate: [AuthGuard]  },
   { path: 'dashboard-p', component: DashboardPComponent, canActivate: [AuthGuard] },
-  { path: 'add-new-medication', component: AddNewMedicationComponent },
-  { path: 'doctor-cards', component: DoctorCardsComponent },
-  { path: 'chat', component: ChatComponent },
+  { path: 'add-new-medication', component: AddNewMedicationComponent, canActivate: [AuthGuard]  },
+  { path: 'doctor-cards', component: DoctorCardsComponent, canActivate: [AuthGuard]  },
+  { path: 'chat', component: ChatComponent, canActivate: [AuthGuard]  },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }, 
   { path: 'contact', component: ContactComponent },
-  {path: 'chat', component: ChatComponent },
-  {path: 'myprofile', component: ProfileComponent },
+  {path: 'chat', component: ChatComponent, canActivate: [AuthGuard]  },
+  {path: 'myprofile', component: ProfileComponent, canActivate: [AuthGuard]  },
     {path:'signup2', component: Signup2Component},
-    {path:'booking', component: BookingComponent},
+    {path:'booking', component: BookingComponent, canActivate: [AuthGuard] },
+    {path:'patient-cards', component: PatientCardsComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/home' },
 ];
 
