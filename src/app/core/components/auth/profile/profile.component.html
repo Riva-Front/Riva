@@ -1,26 +1,21 @@
 <div class="min-h-screen bg-[#F8F9FB] font-sans flex">
 
     <aside class="fixed left-0 top-0 h-screen w-20 bg-white border-r border-gray-200 hidden md:flex flex-col items-center py-6 gap-8 shadow-sm z-50">
+
         <div>
-            <img src="/Picture1.png" routerLink="/dashboard-p" alt="RIVA Logo" class="w-12 hover:scale-105 transition-transform cursor-pointer">
+            <img src="/Picture1.png" routerLink="/dashboard-p" class="w-12 hover:scale-105 cursor-pointer">
         </div>
+
         <div class="flex flex-col gap-6 text-gray-400">
-            <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/dashboard-p">
-                <i class="fas fa-home"></i>
-            </button>
-            <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/add-new-medication">
-                <i class="fas fa-pills"></i>
-            </button>
-            <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/doctor-cards">
-                <i class="fa-solid fa-user-doctor"></i>
-            </button>
-            <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/chat">
-                <i class="fa-brands fa-rocketchat"></i>
-            </button>
-            <button class="p-2 bg-blue-50 text-blue-600 rounded-lg" routerLink="/myprofile">
-                <i class="fa-solid fa-circle-user"></i>
-            </button>
+
+            <button *ngFor="let item of sidebarLinks" class="p-2 hover:text-blue-600 transition-colors" [routerLink]="item.route">
+
+      <i class="fa-solid" [ngClass]="item.icon"></i>
+
+    </button>
+
         </div>
+
     </aside>
 
     <div class="flex-1 md:ml-20">

@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
   userRole: 'patient' | 'doctor' = 'patient';
   get isDoctor():  boolean { return this.userRole === 'doctor';  }
   get isPatient(): boolean { return this.userRole === 'patient'; }
+  sidebarLinks: { icon: string; route: string }[] = [];
 
   // ── Forms ────────────────────────────────────────────────
   accountForm:  FormGroup;
@@ -92,8 +93,27 @@ export class ProfileComponent implements OnInit {
     const raw = localStorage.getItem('role') ?? '';
     this.userRole = raw.toString().toLowerCase().includes('doctor') ? 'doctor' : 'patient';
     console.log('[Profile] userRole:', this.userRole);
+     // ⭐ NEW
+    this.setSidebar();
   }
-
+  private setSidebar(): void {   if (this.isDoctor) {
+      this.sidebarLinks = [
+        { icon: 'fas fa-home', route: '/dashboard' },
+        { icon: 'fa-solid fa-circle-user', route: '/profile' },
+        { icon: 'fa-solid fa-phone', route: '/contact' },
+        { icon: 'fa-brands fa-rocketchat', route: '/chat' },
+       
+      ];
+    } else {
+      this.sidebarLinks = [
+        { icon: 'fa-home', route: '/dashboard-p' },
+        { icon: 'fa-pills', route: '/add-new-medication' },
+        { icon: 'fa-user-doctor', route: '/doctor-cards' },
+        { icon: 'fa-brands fa-rocketchat', route: '/chat' },
+        { icon: 'fa-circle-user', route: '/myprofile' },
+      ];
+    }
+  }
   // ── Load ─────────────────────────────────────────────────
   loadProfile(): void {
     this.isLoading = true;
@@ -110,6 +130,7 @@ export class ProfileComponent implements OnInit {
           if (roleFromApi) {
             this.userRole = roleFromApi.toString().toLowerCase().includes('doctor') ? 'doctor' : 'patient';
           }
+          this.setSidebar();
 
           this.accountForm.patchValue({
             firstName:   user.first_name                    || '',

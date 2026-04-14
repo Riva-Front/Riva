@@ -1,91 +1,126 @@
 <div class="flex h-screen bg-[#f0f7ff] overflow-hidden font-sans">
 
     <!-- SIDEBAR -->
-    <aside class="w-20 bg-white border-r border-gray-200 flex flex-col items-center py-6 gap-8 shadow-sm z-50">
-        <!-- شعار الموقع -->
-        <div class="text-blue-600 font-bold text-xl">
-            <img src="/Picture1.png" routerLink="/dashboard-p" alt="RIVA Logo" class="w-12">
-        </div>
-
-        <!-- أيقونات التنقل الرئيسية -->
+    <aside class="w-20 bg-white border-r border-gray-200 flex flex-col items-center py-6 gap-8 shadow-sm z-50 shrink-0">
+        <img src="/Picture1.png" routerLink="/dashboard" alt="Logo" class="w-12 cursor-pointer">
         <div class="flex flex-col gap-6 text-gray-400">
             <button class="p-2 bg-blue-50 text-blue-600 rounded-lg" routerLink="/dashboard"><i class="fas fa-home"></i></button>
-            <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/myprofile"><i class="fa-solid fa-circle-user"></i></button>
-            <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/contact"><i class="fa-solid fa-phone"></i></button>
+            <button class="p-2 hover:text-blue-600" routerLink="/myprofile"><i class="fa-solid fa-circle-user"></i></button>
             <button class="p-2 hover:text-blue-600" routerLink="/chat"><i class="fa-brands fa-rocketchat"></i></button>
-            <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/patient-cards"><i class="fa-solid fa-head-side-virus"></i></button>
-
-
-        </div>
-        <div class="mt-auto">
-            <button class="p-2 text-gray-400 hover:text-gray-600"><i class="fas fa-cog"></i></button>
         </div>
     </aside>
 
-    <!-- MAIN AREA -->
-    <div class="flex-1 flex flex-col overflow-hidden ">
+    <!-- MAIN -->
+    <div class="flex-1 flex flex-col overflow-hidden">
 
         <!-- HEADER -->
-        <header class="h-20 bg-[#f0f7ff] flex justify-between items-center px-8 shrink-0 ">
+        <header class="h-20 bg-[#f0f7ff] flex justify-between items-center px-8 shrink-0">
             <div>
-                <h1 class="text-xl font-extrabold text-slate-800 ">Doctor Dashboard</h1>
-                <p class="text-2xs text-slate-400 ">Last updated: Just now</p>
+                <h1 class="text-xl font-extrabold text-slate-800">Doctor Dashboard</h1>
+                <p class="text-xs text-slate-400">Welcome back, Dr. {{ currentDoctor.name }}</p>
             </div>
-            <div class="flex items-center gap-3 bg-white p-1.5 pr-4 rounded-2xl shadow-sm border border-blue-50 ">
-                <div class="text-right ">
-                    <p class="text-xs font-bold text-slate-700 leading-3 ">{{ currentDoctor.name }}</p>
-                    <span class="text-[9px] text-green-500 font-bold uppercase tracking-tighter ">● {{ currentDoctor.status }}</span>
+            <div class="flex items-center gap-3 bg-white p-1.5 pr-4 rounded-2xl shadow-sm border border-blue-50">
+                <div class="text-right">
+                    <p class="text-xs font-bold text-slate-700 leading-3">{{ currentDoctor.name }}</p>
+                    <span class="text-[9px] text-green-500 font-bold uppercase">● {{ currentDoctor.status }}</span>
                 </div>
-                <img [src]="currentDoctor.avatar " class="w-9 h-9 rounded-full " alt="Profile " />
+                <img [src]="currentDoctor.avatar" class="w-9 h-9 rounded-full object-cover" alt="Profile">
             </div>
         </header>
 
-        <!-- MAIN CONTENT -->
-        <main class="flex-1 overflow-y-auto px-8 pb-8 space-y-6 ">
+        <!-- CONTENT -->
+        <main class="flex-1 overflow-y-auto px-8 pb-8 space-y-6">
 
-            <!-- STATS CARDS -->
-            <!-- <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 ">
-                <div class="bg-white p-5 rounded-4xl border border-blue-50 shadow-sm ">
-                    <p class="text-slate-400 text-xs font-bold mb-1 ">Total Patients</p>
-                    <span class="text-2xl font-black text-slate-800 ">{{ stats.total }}</span>
+            <!-- ══ PENDING FOLLOW REQUESTS ══ -->
+            <div class="bg-white p-6 rounded-[2.5rem] border border-blue-50 shadow-sm">
+                <div class="flex justify-between items-center mb-5">
+                    <h2 class="text-base font-bold text-slate-800">
+                        Follow Requests
+                        <span *ngIf="pendingRequests.length > 0" class="ml-2 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">
+              {{ pendingRequests.length }}
+            </span>
+                    </h2>
                 </div>
-                <div class="bg-rose-50 p-5 rounded-4xl border border-rose-100 shadow-sm ">
-                    <p class="text-rose-400 text-xs font-bold mb-1 ">High Risk Patients</p>
-                    <span class="text-2xl font-black text-rose-500 ">{{ stats.highRisk }}</span>
-                </div>
-                <div class="bg-orange-50 p-5 rounded-4xl border border-orange-100 shadow-sm ">
-                    <p class="text-orange-400 text-xs font-bold mb-1 ">Reports (PDF)</p>
-                    <span class="text-2xl font-black text-orange-500 ">{{ stats.pdfs }}</span>
-                </div>
-                <div class="bg-white p-5 rounded-4xl border border-blue-50 shadow-sm ">
-                    <p class="text-slate-400 text-xs font-bold mb-1 ">Avg Adherence</p>
-                    <span class="text-2xl font-black text-green-500 ">{{ stats.adherence }}%</span>
-                </div>
-            </div> -->
 
-            <!-- GRID -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
-
-                <!-- PATIENT OVERVIEW -->
-                <div class="lg:col-span-8 bg-white p-6 rounded-[2.5rem] border border-blue-50 shadow-sm ">
-                    <div class="flex justify-between items-center mb-6 ">
-                        <h2 class="text-lg font-bold text-slate-800 ">Patient Overview</h2>
-                        <a href="# " class="text-blue-500 text-xs font-bold hover:underline ">View All</a>
+                <!-- Loading -->
+                <div *ngIf="isLoadingRequests" class="space-y-3">
+                    <div *ngFor="let i of [1,2]" class="flex items-center gap-4 animate-pulse">
+                        <div class="w-10 h-10 rounded-full bg-slate-200"></div>
+                        <div class="flex-1 h-4 bg-slate-100 rounded"></div>
+                        <div class="w-20 h-8 bg-slate-100 rounded-xl"></div>
+                        <div class="w-20 h-8 bg-slate-100 rounded-xl"></div>
                     </div>
-                    <div class="space-y-3 ">
-                        <div *ngFor="let patient of patients " class="flex items-center justify-between p-3 hover:bg-slate-50 rounded-2xl transition-all cursor-pointer ">
-                            <div class="flex items-center gap-4 ">
-                                <span class="w-2 h-2 rounded-full shrink-0 " [class.bg-rose-500]="patient.status==='Critical' " [class.bg-orange-400]="patient.status==='Attention' " [class.bg-green-500]="patient.status==='Stable' ">
-                </span>
-                                <img [src]="patient.img " class="w-10 h-10 rounded-full object-cover " [alt]="patient.name ">
+                </div>
+
+                <!-- Empty -->
+                <div *ngIf="!isLoadingRequests && pendingRequests.length === 0" class="text-center py-8 text-slate-400 text-sm">
+                    <i class="fa-solid fa-user-check text-3xl mb-2 block text-slate-200"></i> No pending follow requests
+                </div>
+
+                <!-- Requests List -->
+                <div *ngIf="!isLoadingRequests && pendingRequests.length > 0" class="space-y-3">
+                    <div *ngFor="let req of pendingRequests" class="flex items-center gap-4 p-3 bg-blue-50/50 rounded-2xl border border-blue-100">
+
+                        <img [src]="req.avatar" [alt]="req.name" class="w-10 h-10 rounded-full object-cover shrink-0">
+
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-bold text-slate-800 truncate">{{ req.name }}</p>
+                            <p class="text-xs text-slate-400 truncate">{{ req.condition }} · {{ req.requestedAt }}</p>
+                        </div>
+
+                        <!-- Accept -->
+                        <button (click)="acceptRequest(req)" [disabled]="req.isProcessing" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-[11px] font-black rounded-xl transition-all disabled:opacity-50 flex items-center gap-1">
+              <i class="fas fa-check"></i> Accept
+            </button>
+
+                        <!-- Reject -->
+                        <button (click)="rejectRequest(req)" [disabled]="req.isProcessing" class="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-500 text-[11px] font-black rounded-xl transition-all disabled:opacity-50 flex items-center gap-1">
+              <i class="fas fa-times"></i> Reject
+            </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ GRID ══ -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- PATIENTS LIST -->
+                <div class="lg:col-span-8 bg-white p-6 rounded-[2.5rem] border border-blue-50 shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-lg font-bold text-slate-800">My Patients</h2>
+                        <span class="text-xs text-slate-400 font-medium">{{ patients.length }} total</span>
+                    </div>
+
+                    <!-- Loading -->
+                    <div *ngIf="isLoadingPatients" class="space-y-3">
+                        <div *ngFor="let i of [1,2,3]" class="flex items-center gap-4 animate-pulse">
+                            <div class="w-2 h-2 rounded-full bg-slate-200"></div>
+                            <div class="w-10 h-10 rounded-full bg-slate-200"></div>
+                            <div class="flex-1 h-4 bg-slate-100 rounded"></div>
+                        </div>
+                    </div>
+
+                    <!-- Empty -->
+                    <div *ngIf="!isLoadingPatients && patients.length === 0" class="text-center py-12 text-slate-400">
+                        <i class="fa-solid fa-users text-4xl mb-3 block text-slate-200"></i>
+                        <p class="text-sm font-medium">No patients yet</p>
+                        <p class="text-xs mt-1">Accept follow requests to see patients here</p>
+                    </div>
+
+                    <!-- Patients -->
+                    <div *ngIf="!isLoadingPatients && patients.length > 0" class="space-y-3">
+                        <div *ngFor="let patient of patients" class="flex items-center justify-between p-3 hover:bg-slate-50 rounded-2xl transition-all cursor-pointer" [routerLink]="['/chat']">
+                            <div class="flex items-center gap-4">
+                                <span class="w-2 h-2 rounded-full shrink-0" [class.bg-rose-500]="patient.status === 'Critical'" [class.bg-orange-400]="patient.status === 'Attention'" [class.bg-green-500]="patient.status === 'Stable'"></span>
+                                <img [src]="patient.img" class="w-10 h-10 rounded-full object-cover" [alt]="patient.name">
                                 <div>
-                                    <h3 class="text-sm font-bold text-slate-700 ">{{ patient.name }}</h3>
-                                    <p class="text-2xs text-slate-400 font-medium ">{{ patient.condition }}</p>
+                                    <h3 class="text-sm font-bold text-slate-700">{{ patient.name }}</h3>
+                                    <p class="text-xs text-slate-400 font-medium">{{ patient.condition }}</p>
                                 </div>
                             </div>
-                            <div class="text-right ">
-                                <p class="text-2xs font-bold text-slate-500 ">Room {{ patient.room }}</p>
-                                <p class="text-[9px] font-black uppercase tracking-tight " [class.text-rose-500]="patient.status==='Critical' " [class.text-orange-400]="patient.status==='Attention' " [class.text-green-500]="patient.status==='Stable' ">
+                            <div class="text-right">
+                                <p class="text-xs font-bold text-slate-500">Room {{ patient.room }}</p>
+                                <p class="text-[9px] font-black uppercase tracking-tight" [class.text-rose-500]="patient.status === 'Critical'" [class.text-orange-400]="patient.status === 'Attention'" [class.text-green-500]="patient.status === 'Stable'">
                                     {{ patient.status }}
                                 </p>
                             </div>
@@ -94,44 +129,40 @@
                 </div>
 
                 <!-- AI ASSISTANT -->
-                <div class="lg:col-span-4 bg-gradient-to-b from-blue-50/50 to-white p-6 rounded-[2.5rem] border border-blue-50 flex flex-col items-center shadow-sm gap-4 ">
-                    <div class="bg-blue-50 rounded-[30px] h-[250px] relative overflow-hidden shadow-sm border border-blue-100 w-full ">
-                        <div class="absolute top-4 left-4 bg-white/80 backdrop-blur-sm p-3 rounded-xl shadow-sm z-10 ">
-                            <p class="text-blue-600 font-bold text-sm ">Hey! I'm Riva 👋</p>
+                <div class="lg:col-span-4 bg-gradient-to-b from-blue-50/50 to-white p-6 rounded-[2.5rem] border border-blue-50 flex flex-col items-center shadow-sm gap-4">
+                    <div class="bg-blue-50 rounded-[30px] h-[200px] relative overflow-hidden shadow-sm border border-blue-100 w-full">
+                        <div class="absolute top-4 left-4 bg-white/80 backdrop-blur-sm p-3 rounded-xl shadow-sm z-10">
+                            <p class="text-blue-600 font-bold text-sm">Hey! I'm Riva 👋</p>
                         </div>
-                        <spline-viewer url="https://prod.spline.design/RfqAjOnSviCEEX3U/scene.splinecode " class="w-full h-full "></spline-viewer>
+                        <spline-viewer url="https://prod.spline.design/RfqAjOnSviCEEX3U/scene.splinecode" class="w-full h-full"></spline-viewer>
                     </div>
-                    <h3 class="text-sm font-black text-slate-800 ">Medical AI Assistant</h3>
-                    <p class="text-[9px] text-slate-400 font-bold ">Ready to help with patient analysis</p>
-                    <div class="w-full space-y-2 ">
-                        <button class="w-full bg-white p-3 rounded-xl text-2xs font-bold text-blue-500 shadow-sm border border-blue-50 flex items-center gap-3 hover:bg-blue-50 transition-colors ">
-              <i class="fa-solid fa-chart-area "></i> Analyze Patient Trends
+                    <h3 class="text-sm font-black text-slate-800">Medical AI Assistant</h3>
+                    <div class="w-full space-y-2">
+                        <button class="w-full bg-white p-3 rounded-xl text-xs font-bold text-blue-500 shadow-sm border border-blue-50 flex items-center gap-3 hover:bg-blue-50 transition-colors">
+              <i class="fa-solid fa-chart-area"></i> Analyze Patient Trends
             </button>
-                        <button class="w-full bg-white p-3 rounded-xl text-2xs font-bold text-orange-500 shadow-sm border border-blue-50 flex items-center gap-3 hover:bg-orange-50 transition-colors ">
-              <i class="fa-solid fa-circle-exclamation "></i> Risk Assessment
+                        <button class="w-full bg-white p-3 rounded-xl text-xs font-bold text-orange-500 shadow-sm border border-blue-50 flex items-center gap-3 hover:bg-orange-50 transition-colors">
+              <i class="fa-solid fa-circle-exclamation"></i> Risk Assessment
             </button>
-                        <button class="w-full bg-white p-3 rounded-xl text-2xs font-bold text-green-500 shadow-sm border border-blue-50 flex items-center gap-3 hover:bg-green-50 transition-colors ">
+                        <button class="w-full bg-white p-3 rounded-xl text-xs font-bold text-green-500 shadow-sm border border-blue-50 flex items-center gap-3 hover:bg-green-50 transition-colors">
               <span>💊</span> Drug Interactions
             </button>
                     </div>
                 </div>
 
                 <!-- PIE CHART -->
-                <div class="lg:col-span-6 bg-white p-6 rounded-[2.5rem] border border-blue-50 shadow-sm ">
-                    <h2 class="text-sm font-black text-slate-800 mb-4 uppercase tracking-widest px-2 ">Patient Status</h2>
-                    <apx-chart [series]="pieOptions.series " [chart]="pieOptions.chart " [labels]="pieOptions.labels " [colors]="pieOptions.colors " [responsive]="pieOptions.responsive ">
-                    </apx-chart>
+                <div class="lg:col-span-6 bg-white p-6 rounded-[2.5rem] border border-blue-50 shadow-sm">
+                    <h2 class="text-sm font-black text-slate-800 mb-4 uppercase tracking-widest">Patient Status</h2>
+                    <apx-chart [series]="pieOptions.series" [chart]="pieOptions.chart" [labels]="pieOptions.labels" [colors]="pieOptions.colors" [responsive]="pieOptions.responsive"></apx-chart>
                 </div>
 
                 <!-- LINE CHART -->
-                <div class="lg:col-span-6 bg-white p-6 rounded-[2.5rem] border border-blue-50 shadow-sm ">
-                    <h2 class="text-sm font-black text-slate-800 mb-4 uppercase tracking-widest px-2 ">Weekly Admissions</h2>
-                    <apx-chart [series]="lineOptions.series " [chart]="lineOptions.chart " [xaxis]="lineOptions.xaxis " [stroke]="lineOptions.stroke " [colors]="lineOptions.colors ">
-                    </apx-chart>
+                <div class="lg:col-span-6 bg-white p-6 rounded-[2.5rem] border border-blue-50 shadow-sm">
+                    <h2 class="text-sm font-black text-slate-800 mb-4 uppercase tracking-widest">Weekly Patients</h2>
+                    <apx-chart [series]="lineOptions.series" [chart]="lineOptions.chart" [xaxis]="lineOptions.xaxis" [stroke]="lineOptions.stroke" [colors]="lineOptions.colors"></apx-chart>
                 </div>
 
             </div>
         </main>
-
     </div>
 </div>
