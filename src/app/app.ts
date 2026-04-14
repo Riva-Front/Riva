@@ -134,7 +134,9 @@ export class App implements OnInit {
       'myprofile',
       'signup2',
       'booking',
-      'patient-cards'
+      'patient-cards',
+      'profile-d',
+      'doctors-follow-request'
     ];
     return authRoutes.some(route => this.router.url.includes(route));
   }

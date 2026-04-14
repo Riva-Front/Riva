@@ -1,31 +1,24 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // لدعم ngModel
-import { CommonModule } from '@angular/common'; // لدعم توابع Angular الأساسية
-import { RouterModule } from '@angular/router'; // لدعم الروترات
+import { FormsModule } from '@angular/forms'; 
+import { CommonModule } from '@angular/common'; 
+import { RouterModule } from '@angular/router'; 
 
 @Component({
-  selector: 'app-dashboard-p', // اسم الـ component
-  standalone: true, // Standalone component
-  imports: [FormsModule, CommonModule, RouterModule], // الموديولات المستوردة
-  templateUrl: './dashboard-p.component.html', // رابط ملف HTML
-  styleUrls: ['./dashboard-p.component.css'], // رابط ملف CSS
-  schemas: [CUSTOM_ELEMENTS_SCHEMA] // لدعم عناصر غير قياسية مثل spline-viewer
+  selector: 'app-dashboard-p',
+  standalone: true,
+  imports: [FormsModule, CommonModule, RouterModule],
+  templateUrl: './dashboard-p.component.html',
+  styleUrls: ['./dashboard-p.component.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardPComponent {
 
-  painLevel: number = 5; // مستوى الألم الحالي
-  selectedMood: number | null = 5; // الحالة المزاجية المحددة (Emoji)
-  notes: string = ''; // الملاحظات أو الأعراض
-  // تعريف المتغير لحفظ حالة النوم (ممكن تحطيه تحت الـ painLevel)
-sleepQuality: string = ''; 
+  painLevel: number = 5; 
+  selectedMood: number | null = 5; 
+  notes: string = ''; 
+  sleepQuality: string = ''; 
 
-// الـ Function اللي بتغير القيمة
-setSleepQuality(value: string) {
-    this.sleepQuality = value;
-    console.log('Sleep quality selected:', value);
-}
-
-  // مصفوفة الحالات المزاجية + مستوى الألم المرتبط بكل واحد
+  // مصفوفة الحالات المزاجية
   moods = [
     { id: 1, emoji: '🤩', level: 1 }, 
     { id: 3, emoji: '😃', level: 3 },
@@ -34,66 +27,66 @@ setSleepQuality(value: string) {
     { id: 10, emoji: '😠', level: 10 }, 
   ];
 
-  // مصفوفة الأيام الأسبوعية مع حالة أخذ الدواء لكل يوم
+  // مصفوفة الأيام الأسبوعية
   week = [
-  
     { day: 'S', taken: false },
-    { day: 'M', taken: false },
+    { day: 'M', taken: true },  // مثال ليوم مأخوذ مسبقاً
     { day: 'T', taken: false },
     { day: 'W', taken: false },
     { day: 'Th', taken: false },
     { day: 'F', taken: false },
-    {day: 'S', taken: false },
+    { day: 'Sa', taken: false },
   ];
 
-  // حساب نسبة الالتزام بالأدوية (Adherence)
+  // حساب نسبة الالتزام بالأدوية (تتحدث تلقائياً عند تغيير حالة الأيام)
   get adherence(): number {
-    const takenDays = this.week.filter(d => d.taken).length; // عدد الأيام التي أخذ فيها الدواء
-    return Math.round((takenDays / this.week.length) * 100); // النسبة %
+    const takenDays = this.week.filter(d => d.taken).length;
+    return Math.round((takenDays / this.week.length) * 100);
   }
 
-  // عند الضغط على إيموجي لتحديد المزاج
+  // دالة أخذ الدواء (تؤثر على أول يوم متاح)
+  onTakeMedication() {
+    const nextDayToTake = this.week.find(d => !d.taken);
+    if (nextDayToTake) {
+      nextDayToTake.taken = true;
+    } else {
+      alert("All medications for this week are completed! 🎉");
+    }
+  }
+
+  remindLater() {
+    alert('Reminder snoozed for 30 minutes.');
+  }
+
+  setSleepQuality(value: string) {
+    this.sleepQuality = value;
+  }
+
   selectMood(mood: any) {
-    this.selectedMood = mood.id; // حفظ الحالة المزاجية
-    this.painLevel = mood.level; // تحديث مستوى الألم بناءً على المزاج
+    this.selectedMood = mood.id;
+    this.painLevel = mood.level;
   }
 
-  // عند تحريك Slider لتغيير مستوى الألم
   updateMoodFromSlider() {
     const closest = this.moods.reduce((prev, curr) => {
-      // اختيار المزاج الأقرب لمستوى الألم الجديد
       return (Math.abs(curr.level - this.painLevel) < Math.abs(prev.level - this.painLevel) ? curr : prev);
     });
-    this.selectedMood = closest.id; // تحديث المزاج
+    this.selectedMood = closest.id;
   }
 
-  // قلب حالة اليوم (تم أخذ الدواء أو لا)
   toggleDay(day: any) {
-    day.taken = !day.taken; // العكس
+    day.taken = !day.taken;
   }
 
-  // عند الضغط على زر "أخذ الدواء" يتم تعيين جميع الأيام إلى true
-  onTakeMedication() {
-    this.week.forEach(d => d.taken = true);
-  }
-
-  // زر لتأجيل التذكير
-  remindLater() {
-    console.log('Reminder postponed'); // طباعة رسالة في الكونسول
-  }
-
-  // عند الضغط على زر "Submit Check-in"
   submitCheckIn() {
     alert(`Submitted Successfully!
 Pain Level: ${this.painLevel}
 Mood: ${this.getMoodEmoji()}
-Sleep Quality: ${this.sleepQuality} `); // عرض رسالة للمستخدم بالمستوى الحالي والمزاج
+Sleep Quality: ${this.sleepQuality}`);
   }
 
-  // إرجاع إيموجي المزاج الحالي
   getMoodEmoji(): string {
-    const mood = this.moods.find(m => m.id === this.selectedMood); // البحث عن المزاج
-    return mood ? mood.emoji : ''; // إرجاع الإيموجي أو فارغ
+    const mood = this.moods.find(m => m.id === this.selectedMood);
+    return mood ? mood.emoji : '';
   }
-
-} // نهاية الكلاس
+}

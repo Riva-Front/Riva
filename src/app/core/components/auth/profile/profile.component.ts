@@ -14,27 +14,44 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class ProfileComponent implements OnInit {
 
-  accountForm: FormGroup;
+  // ── Role ────────────────────────────────────────────────
+  userRole: 'patient' | 'doctor' = 'patient';
+  get isDoctor():  boolean { return this.userRole === 'doctor';  }
+  get isPatient(): boolean { return this.userRole === 'patient'; }
+
+  // ── Forms ────────────────────────────────────────────────
+  accountForm:  FormGroup;
   passwordForm: FormGroup;
 
-  isLoading = false;
-  isSaving = false;
+  // ── State ────────────────────────────────────────────────
+  isLoading        = false;
+  isSaving         = false;
   isSavingPassword = false;
-  successMessage = '';
-  errorMessage = '';
-  passwordSuccess = '';
-  passwordError = '';
-  profileImageUrl: string = '';
+  successMessage   = '';
+  errorMessage     = '';
+  passwordSuccess  = '';
+  passwordError    = '';
+  profileImageUrl  = '';
 
-  activeTab: 'personal' | 'security' | 'notifications' | 'medical' = 'personal';
+  activeTab: 'personal' | 'medical' = 'personal';
 
-  conditions = {
-    diabetes: false,
-    hypertension: false,
-    cancer: false,
-  };
-
+  // ── Patient fields ───────────────────────────────────────
+  conditions = { diabetes: false, hypertension: false, cancer: false };
   customConditions: string[] = [];
+
+  // ── Doctor fields ────────────────────────────────────────
+  specialization    = '';
+  yearsOfExperience : number | null = null;
+  consultationFee   : number | null = null;
+  clinicAddress     = '';
+  availableDays     : string[] = [];
+
+  readonly dayOptions = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  readonly specializationOptions = [
+    'General Practice','Cardiology','Dermatology','Endocrinology',
+    'Gastroenterology','Neurology','Oncology','Orthopedics',
+    'Pediatrics','Psychiatry','Radiology','Surgery','Urology'
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -45,95 +62,83 @@ export class ProfileComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.accountForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: [''],
-      address: [''],
-      country: ['Egypt', Validators.required],
-      age: [''],
-      gender: [''],
+      firstName:   ['', Validators.required],
+      lastName:    ['', Validators.required],
+      email:       ['', [Validators.required, Validators.email]],
+      phone:       [''],
+      address:     [''],
+      country:     ['Egypt', Validators.required],
+      age:         [''],
+      gender:      [''],
       description: [''],
     });
 
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
+      newPassword:     ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
     });
   }
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/signin']);
-      return;
-    }
-
+    if (!this.authService.isAuthenticated()) { this.router.navigate(['/signin']); return; }
+    this.resolveRole();
     this.loadProfile();
   }
 
+  // ── Role detection ────────────────────────────────────────
+  private resolveRole(): void {
+    const raw = localStorage.getItem('role') ?? '';
+    this.userRole = raw.toString().toLowerCase().includes('doctor') ? 'doctor' : 'patient';
+    console.log('[Profile] userRole:', this.userRole);
+  }
+
+  // ── Load ─────────────────────────────────────────────────
   loadProfile(): void {
     this.isLoading = true;
-
     this.authService.getProfile().subscribe({
       next: (res: any) => {
         this.zone.run(() => {
-          console.log('PROFILE RESPONSE:', res);
+          console.log('=== PROFILE RAW RESPONSE ===', JSON.stringify(res, null, 2));
 
-          const user = res.user || res;
-          const roleProfile = res.role_profile || res.roleProfile || {};
+          const user        = res.user || res;
+          const roleProfile = res.role_profile || res.roleProfile || res.doctor || res.patient || res.profile || res.data || {};
 
-          const medicalHistory =
-            roleProfile.medical_history ||
-            user.medical_history ||
-            '';
+          // Override role from API
+          const roleFromApi = res.role ?? user.role ?? user.type ?? '';
+          if (roleFromApi) {
+            this.userRole = roleFromApi.toString().toLowerCase().includes('doctor') ? 'doctor' : 'patient';
+          }
 
           this.accountForm.patchValue({
-            firstName: user.first_name || '',
-            lastName: user.last_name || '',
-            email: user.email || '',
-            phone: user.phone || '',
-            address: user.address || '',
-            country: user.country || 'Egypt',
-            age: roleProfile.age || user.age || '',
-            gender: roleProfile.gender || user.gender || '',
-            description: roleProfile.about || user.about || '',
+            firstName:   user.first_name                    || '',
+            lastName:    user.last_name                     || '',
+            email:       user.email                         || '',
+            phone:       user.phone                         || '',
+            address:     roleProfile.address || user.address || '',
+            country:     user.country                       || 'Egypt',
+            age:         roleProfile.age     || user.age     || '',
+            gender:      roleProfile.gender  || user.gender  || '',
+            description: roleProfile.about   || user.about   || '',
           });
 
-          const conditionsArray = medicalHistory
-            ? medicalHistory
-                .split(',')
-                .map((c: string) => c.trim())
-                .filter((c: string) => c.length > 0)
-            : [];
-
-          this.conditions = {
-            diabetes: conditionsArray.some((c: string) => c.toLowerCase() === 'diabetes'),
-            hypertension: conditionsArray.some((c: string) => c.toLowerCase() === 'hypertension'),
-            cancer: conditionsArray.some((c: string) => c.toLowerCase() === 'cancer'),
-          };
-
-          this.customConditions = conditionsArray.filter((c: string) => {
-            const lower = c.toLowerCase();
-            return lower !== 'diabetes' && lower !== 'hypertension' && lower !== 'cancer';
-          });
+          if (this.isPatient) this.loadPatientFields(roleProfile, user);
+          else                this.loadDoctorFields(roleProfile, user);
 
           const savedImage = localStorage.getItem('profileImage');
           this.profileImageUrl =
             savedImage ||
             roleProfile.profile_image ||
             user.profile_image ||
-            `https://ui-avatars.com/api/?name=${user.first_name || 'User'}+${user.last_name || ''}&background=E6F0FF&color=2D5BFF`;
+            `https://ui-avatars.com/api/?name=${user.first_name||'User'}+${user.last_name||''}&background=E6F0FF&color=2D5BFF`;
 
           this.isLoading = false;
           this.cdr.detectChanges();
         });
       },
-      error: (err) => {
+      error: () => {
         this.zone.run(() => {
-          console.error('Profile Error:', err.status, err.error);
           this.errorMessage = 'Failed to load profile. Please login again.';
           this.isLoading = false;
           this.cdr.detectChanges();
@@ -142,112 +147,134 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  get selectedConditions(): string[] {
-    const fixedConditions: string[] = [];
-    if (this.conditions.diabetes) fixedConditions.push('Diabetes');
-    if (this.conditions.hypertension) fixedConditions.push('Hypertension');
-    if (this.conditions.cancer) fixedConditions.push('Cancer');
-    return [...fixedConditions, ...this.customConditions];
+  private loadPatientFields(roleProfile: any, user: any): void {
+    const med = roleProfile.medical_history || user.medical_history || '';
+    const arr = med ? med.split(',').map((c: string) => c.trim()).filter(Boolean) : [];
+    this.conditions = {
+      diabetes:     arr.some((c: string) => c.toLowerCase() === 'diabetes'),
+      hypertension: arr.some((c: string) => c.toLowerCase() === 'hypertension'),
+      cancer:       arr.some((c: string) => c.toLowerCase() === 'cancer'),
+    };
+    this.customConditions = arr.filter((c: string) => {
+      const l = c.toLowerCase();
+      return l !== 'diabetes' && l !== 'hypertension' && l !== 'cancer';
+    });
   }
 
-  get selectedConditionsText(): string {
-    return this.selectedConditions.join(', ');
+  private loadDoctorFields(roleProfile: any, user: any): void {
+    this.specialization    = roleProfile.specialty       || user.specialty       || '';
+    this.yearsOfExperience = roleProfile.experience_years || user.experience_years || null;
+    this.consultationFee   = roleProfile.fee              || user.fee              || null;
+    this.clinicAddress     = roleProfile.clinic_address   || user.address          || '';
+    const days = roleProfile.available_days || user.available_days || '';
+    this.availableDays = days ? days.split(',').map((d: string) => d.trim()).filter(Boolean) : [];
   }
+
+  // ── Patient helpers ───────────────────────────────────────
+  get selectedConditions(): string[] {
+    const fixed: string[] = [];
+    if (this.conditions.diabetes)     fixed.push('Diabetes');
+    if (this.conditions.hypertension) fixed.push('Hypertension');
+    if (this.conditions.cancer)       fixed.push('Cancer');
+    return [...fixed, ...this.customConditions];
+  }
+
+  get selectedConditionsText(): string { return this.selectedConditions.join(', '); }
 
   addCondition(event: Event): void {
     event.preventDefault();
     const input = event.target as HTMLInputElement;
     const value = input.value.trim();
     if (!value) return;
-
-    const exists = this.selectedConditions.some(
-      c => c.toLowerCase() === value.toLowerCase()
-    );
-
-    if (!exists) {
+    if (!this.selectedConditions.some(c => c.toLowerCase() === value.toLowerCase()))
       this.customConditions.push(value);
-    }
     input.value = '';
   }
 
   removeCondition(condition: string): void {
-    const lower = condition.toLowerCase();
-    if (lower === 'diabetes') { this.conditions.diabetes = false; return; }
-    if (lower === 'hypertension') { this.conditions.hypertension = false; return; }
-    if (lower === 'cancer') { this.conditions.cancer = false; return; }
-    this.customConditions = this.customConditions.filter(c => c.toLowerCase() !== lower);
+    const l = condition.toLowerCase();
+    if (l === 'diabetes')     { this.conditions.diabetes     = false; return; }
+    if (l === 'hypertension') { this.conditions.hypertension = false; return; }
+    if (l === 'cancer')       { this.conditions.cancer       = false; return; }
+    this.customConditions = this.customConditions.filter(c => c.toLowerCase() !== l);
   }
 
+  // ── Doctor helpers ────────────────────────────────────────
+  toggleDay(day: string): void {
+    const i = this.availableDays.indexOf(day);
+    i === -1 ? this.availableDays.push(day) : this.availableDays.splice(i, 1);
+  }
+  isDaySelected(day: string): boolean { return this.availableDays.includes(day); }
+
+  // ── Image ─────────────────────────────────────────────────
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-
-      if (file.size > 2 * 1024 * 1024) {
-        alert('File size exceeds 2MB.');
-        return;
-      }
-
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        alert('Only JPG, PNG, or GIF files are allowed.');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        const base64 = e.target?.result as string;
-        this.profileImageUrl = base64;
-        localStorage.setItem('profileImage', base64);
-        this.cdr.detectChanges();
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!input.files?.[0]) return;
+    const file = input.files[0];
+    if (file.size > 2 * 1024 * 1024) { alert('File size exceeds 2MB.'); return; }
+    if (!['image/jpeg','image/png','image/gif','image/jpg'].includes(file.type)) { alert('Only JPG, PNG, or GIF.'); return; }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const b64 = e.target?.result as string;
+      this.profileImageUrl = b64;
+      localStorage.setItem('profileImage', b64);
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
   }
 
   triggerFileInput(): void {
-    const fileInput = document.getElementById('profilePhotoInput') as HTMLInputElement;
-    fileInput?.click();
+    (document.getElementById('profilePhotoInput') as HTMLInputElement)?.click();
   }
 
   clearImage(): void {
     localStorage.removeItem('profileImage');
-    const firstName = this.accountForm.get('firstName')?.value || 'User';
-    const lastName = this.accountForm.get('lastName')?.value || '';
-    this.profileImageUrl =
-      `https://ui-avatars.com/api/?name=${firstName}+${lastName}&background=E6F0FF&color=2D5BFF`;
+    const f = this.accountForm.get('firstName')?.value || 'User';
+    const l = this.accountForm.get('lastName')?.value  || '';
+    this.profileImageUrl = `https://ui-avatars.com/api/?name=${f}+${l}&background=E6F0FF&color=2D5BFF`;
     this.cdr.detectChanges();
   }
 
+  // ── Save Profile ──────────────────────────────────────────
   onSave(): void {
-    console.log('onSave called!');
-    console.log('form valid:', this.accountForm.valid);
-    console.log('form values:', this.accountForm.value);
-
     if (this.accountForm.invalid) {
       this.accountForm.markAllAsTouched();
       this.errorMessage = 'Please fill in all required fields.';
       return;
     }
 
-    this.isSaving = true;
-    this.errorMessage = '';
+    this.isSaving      = true;
+    this.errorMessage  = '';
     this.successMessage = '';
 
     const token = this.authService.getToken();
-    const v = this.accountForm.value;
+    const v     = this.accountForm.value;
 
-    const body = {
-      first_name: v.firstName || '',
-      last_name: v.lastName || '',
-      phone: v.phone || '',
-      address: v.address || '',
-      age: v.age ? Number(v.age) : null,
-      gender: v.gender || '',
-      medical_history: this.selectedConditionsText || '',
-    };
+    const body = this.isDoctor
+      ? {
+          first_name:       v.firstName   || '',
+          last_name:        v.lastName    || '',
+          phone:            v.phone       || '',
+          gender:           v.gender      || '',
+          about:            v.description || '',
+          specialty:        this.specialization,
+          experience_years: this.yearsOfExperience,
+          fee:              this.consultationFee,
+          address:          this.clinicAddress,
+          available_days:   this.availableDays.join(', '),
+        }
+      : {
+          first_name:      v.firstName   || '',
+          last_name:       v.lastName    || '',
+          phone:           v.phone       || '',
+          address:         v.address     || '',
+          age:             v.age ? Number(v.age) : null,
+          gender:          v.gender      || '',
+          about:           v.description || '',
+          medical_history: this.selectedConditionsText || '',
+        };
 
-    console.log('BODY SENT:', body);
+    console.log('[Profile] BODY SENT:', JSON.stringify(body, null, 2));
 
     fetch('http://localhost:8000/api/profile', {
       method: 'PUT',
@@ -259,15 +286,12 @@ export class ProfileComponent implements OnInit {
       body: JSON.stringify(body),
     })
       .then(async res => {
-        const data = await res.json();
-        if (!res.ok) {
-          console.error('PROFILE SAVE ERROR:', data);
-          throw new Error(data.message || 'Server error: ' + res.status);
-        }
-        return data;
+        const d = await res.json();
+        console.log('[Profile] SAVE RESPONSE:', JSON.stringify(d, null, 2));
+        if (!res.ok) throw new Error(d.message);
+        return d;
       })
-      .then((data) => {
-        console.log('PROFILE SAVE RESPONSE:', data);
+      .then(() => {
         this.zone.run(() => {
           this.successMessage = '✅ Profile saved successfully!';
           this.isSaving = false;
@@ -275,9 +299,8 @@ export class ProfileComponent implements OnInit {
           this.cdr.detectChanges();
         });
       })
-      .catch(err => {
+      .catch(() => {
         this.zone.run(() => {
-          console.error(err);
           this.errorMessage = '❌ Failed to save. Please try again.';
           this.isSaving = false;
           this.cdr.detectChanges();
@@ -285,63 +308,17 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  // ✅ التعديل الوحيد - بنستخدم authService.changePassword
-  onSavePassword(): void {
-    if (this.passwordForm.invalid) {
-      this.passwordForm.markAllAsTouched();
-      this.passwordError = 'Please fill in all password fields.';
-      return;
-    }
-
-    const { currentPassword, newPassword, confirmPassword } = this.passwordForm.value;
-
-    if (newPassword !== confirmPassword) {
-      this.passwordError = 'Passwords do not match.';
-      return;
-    }
-
-    this.isSavingPassword = true;
-    this.passwordError = '';
-    this.passwordSuccess = '';
-
-    this.authService.changePassword(currentPassword, newPassword).subscribe({
-      next: (data) => {
-        this.zone.run(() => {
-          console.log('PASSWORD UPDATE RESPONSE:', data);
-          this.passwordSuccess = '✅ Password updated successfully!';
-          this.isSavingPassword = false;
-          this.passwordForm.reset();
-          this.cdr.detectChanges();
-        });
-      },
-      error: (err) => {
-        this.zone.run(() => {
-          console.error('PASSWORD UPDATE ERROR:', err);
-          this.passwordError = `❌ ${err?.error?.message || 'Failed to update password. Please try again.'}`;
-          this.isSavingPassword = false;
-          this.cdr.detectChanges();
-        });
-      }
-    });
-  }
-
-  onForgotPassword(): void {
-    alert('A password reset link will be sent to: ' + this.accountForm.value.email);
-  }
-
-  setTab(tab: 'personal' | 'security' | 'notifications' | 'medical'): void {
-    this.activeTab = tab;
+  // ── Misc ──────────────────────────────────────────────────
+  setTab(tab: 'personal' | 'medical'): void {
+    this.activeTab      = tab;
     this.successMessage = '';
-    this.errorMessage = '';
+    this.errorMessage   = '';
   }
 
-  get firstInitial(): string {
-    return this.accountForm.get('firstName')?.value?.charAt(0)?.toUpperCase() || 'U';
-  }
-
+  get firstInitial(): string { return this.accountForm.get('firstName')?.value?.charAt(0)?.toUpperCase() || 'U'; }
   get fullName(): string {
     const f = this.accountForm.get('firstName')?.value || '';
-    const l = this.accountForm.get('lastName')?.value || '';
+    const l = this.accountForm.get('lastName')?.value  || '';
     return `${f} ${l}`.trim() || 'User';
   }
 }

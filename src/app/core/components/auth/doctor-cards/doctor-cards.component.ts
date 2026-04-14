@@ -27,6 +27,11 @@ export class DoctorCardsComponent implements OnInit {
           ? data
           : data?.data || data?.doctors || [];
         this.doctors = doctorsArray.map((d: any) => this.normalizeDoctor(d));
+        // ── DEBUG: شوف structure أول دكتور ──
+        if (doctorsArray.length > 0) {
+          console.log('=== FIRST DOCTOR RAW ===', JSON.stringify(doctorsArray[0], null, 2));
+          console.log('=== FIRST DOCTOR NORMALIZED ===', JSON.stringify(this.doctors[0], null, 2));
+        }
         this.isLoading = false;
       },
       error: (err) => {
@@ -38,43 +43,55 @@ export class DoctorCardsComponent implements OnInit {
   }
 
   normalizeDoctor(d: any): any {
+    // ── اسم الدكتور ──────────────────────────────────────
+    const firstName = d.user?.first_name || d.first_name || '';
+    const lastName  = d.user?.last_name  || d.last_name  || '';
+    const name      = d.user?.name || d.name || d.full_name
+      || `${firstName} ${lastName}`.trim()
+      || '';
+
+    // ── صورة الدكتور: من الـ API فقط، مش localStorage ──
+    // بنجرب كل الأماكن الممكنة في الـ response
+    const photo =
+      d.user?.profile_image   ||   // users.profile_image
+      d.user?.avatar          ||   // users.avatar
+      d.profile_image         ||   // role_profile.profile_image
+      d.avatar                ||   // role_profile.avatar
+      d.photo                 ||
+      d.image                 ||
+      null;                        // null → هنعمل avatar بالاسم
+
     return {
       ...d,
-      name:
-        d.user?.name ||
-        d.user?.first_name ||
-        d.name ||
-        d.first_name ||
-        d.full_name ||
-        '',
-      photo:
-        d.user?.roleProfile ||
-        d.user?.avatar ||
-        d.photo ||
-        d.image ||
-        '',
-      specialty: d.specialty || 'General',
-      bio:
-        d.about ||
-        d.description ||
-        d.bio ||
-        d.notes ||
-        'No description available'
+      _normalizedName:  name,
+      _normalizedPhoto: photo,
+      specialty: d.specialty || d.specialization || 'General',
+      bio: d.about || d.description || d.bio || d.notes || 'No description available',
     };
   }
 
   getDoctorName(d: any): string {
-    return d.name?.trim() || 'Unknown Doctor';
+    return d._normalizedName?.trim() || 'Unknown Doctor';
   }
 
   getAvatarUrl(d: any): string {
-    const localImage = localStorage.getItem('profileImage');
-    const apiImage =
-      d.user?.profile_image ||
-      d.user?.avatar ||
-      d.photo ||
-      d.image;
-    return localImage || apiImage || `https://ui-avatars.com/api/?name=${d.user_id || d.id}`;
+    // لو الـ API بيرجع صورة حقيقية استخدمها
+    const photo =
+      d._normalizedPhoto            ||
+      d.user?.profile_image         ||
+      d.user?.image                 ||
+      d.user?.avatar                ||
+      d.profile_image               ||
+      null;
+
+    if (photo) return photo;
+
+    // الـ backend مش بيحفظ صور → نولد avatar بالاسم
+    const name    = encodeURIComponent(this.getDoctorName(d) || 'Doctor');
+    // كل دكتور بلون مختلف بناءً على الـ id
+    const colors  = ['0052FF','00D1B2','7C3AED','DC2626','059669','D97706','0891B2'];
+    const bg      = colors[(d.id || 1) % colors.length];
+    return `https://ui-avatars.com/api/?name=${name}&background=${bg}&color=fff&size=128&bold=true&rounded=true`;
   }
 
   getSpecialty(d: any): string {
@@ -92,7 +109,10 @@ export class DoctorCardsComponent implements OnInit {
   }
 
   selectDoctor(doctor: any): void {
+    // حفظ الداتا في localStorage
     localStorage.setItem('selectedDoctor', JSON.stringify(doctor));
-    this.router.navigate(['/doctors-follow-request']);
+    // navigate لـ profile-d أولاً
+    const id = doctor.id || doctor.user_id;
+    this.router.navigate(['/profile-d', id]);
   }
 }

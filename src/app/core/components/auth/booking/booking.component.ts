@@ -1,144 +1,317 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  signal,
+  computed,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../../../../service/auth.service';
 
-interface CalendarDay {
-  number: number;
-  date: Date;
-  other: boolean;
-  selected: boolean;
-  isToday: boolean;
-}
-
-interface TimeSlot {
-  time: string;
-  disabled: boolean;
-}
+export type ConsultationType = 'online' | 'inperson';
+export type BookingStep      = 1 | 2 | 3;
+export type PaymentMethod    = 'card' | 'cash';
 
 @Component({
   selector: 'app-booking',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './booking.component.html', // سنضع الـ HTML في ملف منفصل أو هنا
-  styleUrls: ['./booking.component.css']
+  imports: [CommonModule, FormsModule, RouterModule, HttpClientModule],
+  templateUrl: './booking.component.html',
+  styleUrls: ['./booking.component.css'],
 })
-export class BookingComponent implements OnInit {
+export class BookingComponent implements OnInit, OnDestroy {
 
-  currentStep: number = 1;
-  notes: string = '';
-  selectedTime: string = '';
-  selectedDateLabel: string = '';
+  @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
 
-  dayNames: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  monthNames: string[] = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+  // ── Doctor Data ──────────────────────────────────────────
+  doctorId : number | null = null;
+  doctor   : any           = null;
 
-  currentDate: Date = new Date(2025, 10, 1);
-  selectedDay: number = 2;
-  calendarDays: CalendarDay[] = [];
-  currentMonthLabel: string = '';
+  get doctorName(): string {
+    if (!this.doctor) return 'Doctor';
+    if (this.doctor._normalizedName) return this.doctor._normalizedName;
+    const u     = this.doctor.user || this.doctor;
+    const first = u.first_name || '';
+    const last  = u.last_name  || '';
+    return `${first} ${last}`.trim() || 'Doctor';
+  }
 
-  timeSlots: TimeSlot[] = [
+  get doctorSpecialty(): string {
+    return this.doctor?.specialty || this.doctor?.specialization || 'Specialist';
+  }
+
+  get doctorBio(): string {
+    return this.doctor?.about || this.doctor?.bio || this.doctor?.description || '';
+  }
+
+  get doctorFee(): number {
+    return Number(this.doctor?.fee ?? this.doctor?.consultation_fee ?? 0);
+  }
+
+  get doctorAvatar(): string {
+    const photo =
+      this.doctor?._normalizedPhoto    ||
+      this.doctor?.user?.profile_image ||
+      this.doctor?.profile_image       ||
+      this.doctor?.avatar              ||
+      null;
+
+    if (photo) return photo;
+    const name   = encodeURIComponent(this.doctorName);
+    const colors = ['0052FF','00D1B2','7C3AED','059669','D97706'];
+    const bg     = colors[(this.doctor?.id || 1) % colors.length];
+    return `https://ui-avatars.com/api/?name=${name}&background=${bg}&color=fff&size=128&bold=true&rounded=true`;
+  }
+
+  get doctorAvailableDays(): string[] {
+    const days = this.doctor?.available_days || '';
+    if (!days) return [];
+    return days.split(',').map((d: string) => d.trim()).filter(Boolean);
+  }
+
+  get doctorExperience(): number | null {
+    return this.doctor?.experience_years ?? null;
+  }
+
+  // ── State Signals ────────────────────────────────────────
+  currentStep         = signal<BookingStep>(1);
+  selectedConsultType = signal<ConsultationType>('online');
+  selectedSlot        = signal<string | null>(null);
+  notes               = signal<string>('');
+  attachedFile        = signal<File | null>(null);
+  isDragOver          = signal<boolean>(false);
+
+  // ── Payment Signals ──────────────────────────────────────
+  paymentMethod    = signal<PaymentMethod>('cash');
+  cardNumber       = signal<string>('');
+  cardExpiry       = signal<string>('');
+  cardCvv          = signal<string>('');
+  cardName         = signal<string>('');
+  bookingReference = signal<string>('');
+
+  // ── Calendar Signals ─────────────────────────────────────
+  today        = new Date();
+  viewYear     = signal<number>(this.today.getFullYear());
+  viewMonth    = signal<number>(this.today.getMonth());
+  selectedDate = signal<Date | null>(new Date());
+
+  // ── Static Data ──────────────────────────────────────────
+  readonly DAY_NAMES   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  readonly MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  get consultOptions() {
+    const fee = this.doctorFee;
+    return [
+      { id: 'online'   as ConsultationType, label: 'Online consultation', duration: '30 minutes', price: fee || 300 },
+      { id: 'inperson' as ConsultationType, label: 'In-person visit',     duration: '45 minutes', price: fee ? Math.round(fee * 1.2) : 500 },
+    ];
+  }
+
+  readonly timeSlots = [
+    { time: '09:00', disabled: false },
+    { time: '10:00', disabled: false },
+    { time: '11:00', disabled: false },
+    { time: '14:00', disabled: false },
+    { time: '15:00', disabled: false },
+    { time: '16:00', disabled: true  },
     { time: '17:00', disabled: false },
-    { time: '18:10', disabled: false },
-    { time: '18:45', disabled: false },
-    { time: '16:16', disabled: true },
-    { time: '19:20', disabled: false },
   ];
 
-  constructor(private router: Router) {}
+  // ── Computed ─────────────────────────────────────────────
+  selectedConsultOption = computed(() =>
+    this.consultOptions.find(o => o.id === this.selectedConsultType())!
+  );
 
-  ngOnInit(): void {
-    this.buildCalendar();
-    this.updateDateLabel();
-  }
+  calMonthTitle    = computed(() => `${this.MONTH_NAMES[this.viewMonth()]} ${this.viewYear()}`);
+  attachedFileName = computed(() => this.attachedFile()?.name ?? null);
+  showCardFields   = computed(() => this.paymentMethod() === 'card');
 
-  get currentMonthLabelGetter(): string {
-    return this.monthNames[this.currentDate.getMonth()] + ' ' + this.currentDate.getFullYear();
-  }
+  summaryDate       = computed(() =>
+    this.selectedDate()?.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) ?? '—'
+  );
+  selectedDateLabel = computed(() =>
+    this.selectedDate()?.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) ?? 'Select a date'
+  );
+  summaryTime       = computed(() => this.selectedSlot() ?? '—');
+  summaryType       = computed(() => this.selectedConsultOption()?.label ?? '—');
+  summaryPrice      = computed(() => `${this.selectedConsultOption()?.price ?? 0} EGP`);
+  confirmTimeLabel  = computed(() =>
+    this.selectedSlot()
+      ? `${this.selectedSlot()} — ${this.selectedConsultOption()?.duration} session`
+      : '—'
+  );
 
-  buildCalendar(): void {
-    this.currentMonthLabel = this.monthNames[this.currentDate.getMonth()] + ' ' + this.currentDate.getFullYear();
-    const days: CalendarDay[] = [];
-    const today = new Date();
+  calendarCells = computed(() => {
+    const year        = this.viewYear();
+    const month       = this.viewMonth();
+    const firstDay    = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const cells: any[] = [];
 
-    const firstDay = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1);
-    let startDow = firstDay.getDay();
-    startDow = startDow === 0 ? 6 : startDow - 1;
-
-    const prevMonthTotal = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0).getDate();
-    for (let i = startDow - 1; i >= 0; i--) {
-      days.push({
-        number: prevMonthTotal - i,
-        date: new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, prevMonthTotal - i),
-        other: true,
-        selected: false,
-        isToday: false
-      });
-    }
-
-    const daysInMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0).getDate();
+    for (let i = 0; i < firstDay; i++) cells.push({ day: null, state: 'empty' });
     for (let d = 1; d <= daysInMonth; d++) {
-      const date = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), d);
-      days.push({
-        number: d,
-        date,
-        other: false,
-        selected: d === this.selectedDay,
-        isToday:
-          d === today.getDate() &&
-          this.currentDate.getMonth() === today.getMonth() &&
-          this.currentDate.getFullYear() === today.getFullYear()
+      const date       = new Date(year, month, d);
+      const isPast     = date < new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate());
+      const isSelected = this.selectedDate()?.toDateString() === date.toDateString();
+      const isToday    = date.toDateString() === this.today.toDateString();
+      cells.push({
+        day  : d,
+        state: isSelected ? 'selected' : isToday ? 'today' : isPast ? 'disabled' : 'available'
       });
     }
+    return cells;
+  });
 
-    this.calendarDays = days;
+  constructor(
+    private route       : ActivatedRoute,
+    private router      : Router,
+    private http        : HttpClient,
+    private authService : AuthService,
+  ) {}
+
+  // ── Init ─────────────────────────────────────────────────
+  ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.doctorId = idParam ? Number(idParam) : null;
+
+    if (this.doctorId) {
+      this.fetchDoctorById(this.doctorId);
+    } else {
+      this.loadFromLocalStorage();
+    }
   }
 
-  selectDay(day: CalendarDay): void {
-    if (day.other) return;
-    this.selectedDay = day.number;
-    this.buildCalendar();
-    this.updateDateLabel();
+  ngOnDestroy(): void {}
+
+  // ── Doctor Loading ────────────────────────────────────────
+  private fetchDoctorById(id: number): void {
+    const stored   = this.loadFromLocalStorage();
+    const storedId = stored?.id || stored?.user_id;
+
+    if (stored && String(storedId) === String(id)) {
+      console.log('[Booking] Doctor loaded from localStorage ✅');
+      return;
+    }
+
+    const token = this.authService.getToken();
+    this.http.get<any>(`http://localhost:8000/api/doctors/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).subscribe({
+      next : (res) => {
+        console.log('[Booking] Doctor from API:', res);
+        this.doctor = res.data || res.doctor || res;
+      },
+      error: (err) => {
+        console.warn('[Booking] API failed, using localStorage fallback', err);
+        this.loadFromLocalStorage();
+      }
+    });
   }
 
-  updateDateLabel(): void {
-    const date = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.selectedDay);
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    this.selectedDateLabel = `${dayNames[date.getDay()]}, ${this.monthNames[this.currentDate.getMonth()].slice(0, 3)} ${this.selectedDay}`;
+  private loadFromLocalStorage(): any {
+    try {
+      const stored = localStorage.getItem('selectedDoctor');
+      if (stored) {
+        this.doctor = JSON.parse(stored);
+        console.log('[Booking] Doctor from localStorage:', this.doctor);
+        return this.doctor;
+      }
+    } catch {
+      console.error('[Booking] Failed to parse selectedDoctor');
+    }
+    return null;
+  }
+
+  // ── Navigation ────────────────────────────────────────────
+  nextStep(): void {
+    if (this.currentStep() === 1) {
+      if (!this.selectedDate() || !this.selectedSlot()) {
+        
+      }
+
+      const bookingData = {
+        doctorId        : this.doctorId,
+        doctor          : this.doctor,
+        date            : this.selectedDate()?.toISOString(),
+        slot            : this.selectedSlot(),
+        consultType     : this.selectedConsultType(),
+        notes           : this.notes(),
+        summaryDate     : this.summaryDate(),
+        summaryTime     : this.summaryTime(),
+        summaryType     : this.summaryType(),
+        summaryPrice    : this.summaryPrice(),
+        doctorName      : this.doctorName,
+        doctorSpecialty : this.doctorSpecialty,
+      };
+      localStorage.setItem('bookingData', JSON.stringify(bookingData));
+      this.router.navigate(['/doctors-follow-request']);
+    }
+    window.scrollTo(0, 0);
+  }
+
+  prevStep(): void {
+    if (this.currentStep() > 1)
+      this.currentStep.set((this.currentStep() - 1) as BookingStep);
+  }
+
+  // ── Calendar ──────────────────────────────────────────────
+  selectDay(day: number | null, state: string): void {
+    if (day && state !== 'disabled' && state !== 'empty') {
+      this.selectedDate.set(new Date(this.viewYear(), this.viewMonth(), day));
+      this.selectedSlot.set(null);
+    }
   }
 
   prevMonth(): void {
-    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
-    this.buildCalendar();
+    if (this.viewMonth() === 0) { this.viewMonth.set(11); this.viewYear.update(y => y - 1); }
+    else { this.viewMonth.update(m => m - 1); }
   }
 
   nextMonth(): void {
-    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
-    this.buildCalendar();
+    if (this.viewMonth() === 11) { this.viewMonth.set(0); this.viewYear.update(y => y + 1); }
+    else { this.viewMonth.update(m => m + 1); }
   }
 
   goToToday(): void {
-    const today = new Date();
-    this.currentDate = new Date(today.getFullYear(), today.getMonth(), 1);
-    this.selectedDay = today.getDate();
-    this.buildCalendar();
-    this.updateDateLabel();
+    this.viewMonth.set(this.today.getMonth());
+    this.viewYear.set(this.today.getFullYear());
+    this.selectedDate.set(new Date(this.today));
   }
 
-  selectTime(time: string): void {
-    this.selectedTime = time;
+  // ── Slot & Payment ────────────────────────────────────────
+  selectSlot(slot: any): void {
+    if (!slot.disabled) this.selectedSlot.set(slot.time);
   }
 
-  nextStep(): void {
-    if (!this.selectedTime) {
-      alert('Please select an available time slot.');
-      return;
-    }
-    this.currentStep = 2;
-    // this.router.navigate(['/payment']);
+  setPaymentMethod(m: PaymentMethod): void { this.paymentMethod.set(m); }
+
+  // ── File ──────────────────────────────────────────────────
+  triggerFileInput(): void  { this.fileInputRef.nativeElement.click(); }
+  onFileSelected(e: any):void { const file = e.target.files[0]; if (file) this.attachedFile.set(file); }
+  removeFile(): void        { this.attachedFile.set(null); }
+
+  // ── Card Formatting ───────────────────────────────────────
+  formatCardNumber(e: any): void {
+    const val = e.target.value.replace(/\D/g, '').substring(0, 16);
+    this.cardNumber.set(val.match(/.{1,4}/g)?.join(' ') ?? val);
   }
+
+  formatExpiry(e: any): void {
+    const val = e.target.value.replace(/\D/g, '').substring(0, 4);
+    this.cardExpiry.set(val.length >= 2 ? val.substring(0, 2) + ' / ' + val.substring(2) : val);
+  }
+
+  // ── Helpers ───────────────────────────────────────────────
+  isStepActive(s: number): boolean { return this.currentStep() === s; }
+  isStepDone(s: number):   boolean { return this.currentStep() > s;  }
+
+  reschedule():        void { this.currentStep.set(1); }
+  cancelAppointment(): void { if (confirm('Cancel?')) this.currentStep.set(1); }
+  addToCalendar():     void { alert('Added to Google Calendar'); }
+  contactSupport():    void { alert('Support contacted'); }
 }

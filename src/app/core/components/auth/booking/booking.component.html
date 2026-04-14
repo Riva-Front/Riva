@@ -1,156 +1,167 @@
-<div class="min-h-screen bg-slate-50 font-sans">
-    <main class="max-w-5xl mx-auto p-4 md:p-8">
-        <div class="space-y-8">
+<aside class="fixed left-0 top-0 h-screen w-20 bg-white border-r border-gray-200 hidden md:flex flex-col items-center py-6 gap-8 shadow-sm z-50">
+    <div class="text-blue-600 font-bold text-xl">
+        <img src="/Picture1.png" routerLink="/dashboard-p" alt="RIVA Logo" class="w-12">
+    </div>
+    <div class="flex flex-col gap-6 text-gray-400">
+        <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/dashboard-p"><i class="fas fa-home"></i></button>
+        <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/add-new-medication"><i class="fas fa-pills"></i></button>
+        <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/doctor-cards"><i class="fa-solid fa-user-doctor"></i></button>
+        <button class="p-2 hover:text-blue-600" routerLink="/chat"><i class="fa-brands fa-rocketchat"></i></button>
+        <button class="p-2 bg-blue-50 text-blue-600 rounded-lg" routerLink="/booking"><i class="fa-solid fa-calendar"></i></button>
+        <button class="p-2 hover:text-blue-600 transition-colors" routerLink="/myprofile"><i class="fa-solid fa-circle-user"></i></button>
+    </div>
+</aside>
 
-            <!-- Title -->
-            <div class="text-center space-y-1">
-                <h1 class="text-2xl font-bold text-slate-900">Book New Consultation</h1>
-                <p class="text-sm text-slate-400">Complete the following steps to confirm your appointment.</p>
+<!-- ══════════════ STEP 1: Appointment ══════════════ -->
+<main *ngIf="currentStep() === 1" class="min-h-screen bg-slate-50 md:pl-20 pb-12 font-sans">
+    <div class="max-w-[1100px] mx-auto px-5 py-10">
+
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-slate-900 mb-2">Book a new <em class="not-italic text-blue-600">consultation</em></h1>
+            <p class="text-slate-500">Complete the following steps to confirm your appointment</p>
+        </div>
+
+        <!-- Steps indicator -->
+        <div class="flex items-center justify-center mb-12 max-w-[600px] mx-auto">
+            <div class="flex flex-col items-center gap-2 relative z-10">
+                <div [class]="isStepDone(1) ? 'bg-blue-600 text-white' : (isStepActive(1) ? 'border-blue-600 text-blue-600 ring-4 ring-blue-50' : 'border-gray-200 text-gray-400')" class="w-10 h-10 rounded-full bg-white border-2 flex items-center justify-center font-semibold transition-all">
+                    <ng-container *ngIf="isStepDone(1); else num1">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7L5.5 10L11.5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </ng-container>
+                    <ng-template #num1><span>1</span></ng-template>
+                </div>
+                <div class="text-xs font-bold" [class.text-blue-600]="isStepActive(1)">Appointment</div>
             </div>
-
-            <!-- Stepper -->
-            <div class="max-w-md mx-auto py-4 relative">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-slate-100"></div>
+            <div class="flex-1 h-[2px] bg-gray-200 mx-3 mb-6"></div>
+            <div class="flex flex-col items-center gap-2 relative z-10">
+                <div [class]="isStepDone(2) ? 'bg-blue-600 text-white' : (isStepActive(2) ? 'border-blue-600 text-blue-600 ring-4 ring-blue-50' : 'border-gray-200 text-gray-400')" class="w-10 h-10 rounded-full bg-white border-2 flex items-center justify-center font-semibold transition-all">
+                    <span>2</span>
                 </div>
-                <div class="relative flex justify-between">
-                    <div class="flex flex-col items-center gap-2">
-                        <span class="h-10 w-10 flex items-center justify-center rounded-full font-bold text-sm bg-blue-600 text-white ring-4 ring-blue-100 shadow-md">1</span>
-                        <span class="text-xs font-bold text-slate-800">Appointment</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-2">
-                        <span class="h-10 w-10 flex items-center justify-center rounded-full font-bold text-sm bg-white border-2 border-slate-100 text-slate-300">2</span>
-                        <span class="text-xs font-semibold text-slate-400">Payment</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-2">
-                        <span class="h-10 w-10 flex items-center justify-center rounded-full font-bold text-sm bg-white border-2 border-slate-100 text-slate-300">3</span>
-                        <span class="text-xs font-semibold text-slate-400">Confirmation</span>
-                    </div>
-                </div>
+                <div class="text-xs font-medium text-gray-400">Payment</div>
             </div>
-
-            <!-- Main Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-[2fr,1fr] gap-6 items-start">
-
-                <!-- Left Card -->
-                <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-10 space-y-8">
-
-                    <!-- Consultation Type -->
-                    <div class="space-y-3">
-                        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fas fa-desktop text-blue-500 text-xs"></i> Consultation Type
-                        </h2>
-                        <div class="p-4 bg-blue-50 border border-blue-100 rounded-2xl flex justify-between items-center">
-                            <div>
-                                <h3 class="font-bold text-sm text-slate-800">Online Consultation (Telehealth)</h3>
-                                <p class="text-xs text-blue-400 mt-1">Duration: 30 minutes</p>
-                            </div>
-                            <span class="text-lg font-black text-blue-600">300 DZ</span>
-                        </div>
-                    </div>
-
-                    <!-- Select Date -->
-                    <div class="space-y-3">
-                        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fas fa-calendar-alt text-blue-500 text-xs"></i> Select Date
-                        </h2>
-                        <div class="border border-slate-100 rounded-2xl p-5 max-w-sm">
-                            <!-- Calendar Header -->
-                            <div class="flex justify-between items-center mb-5">
-                                <button (click)="prevMonth()" class="text-slate-300 hover:text-slate-500 transition-colors px-2">
-                  <i class="fas fa-chevron-left text-xs"></i>
-                </button>
-                                <span class="font-bold text-sm text-slate-800">{{ currentMonthLabel }}</span>
-                                <button (click)="nextMonth()" class="text-slate-300 hover:text-slate-500 transition-colors px-2">
-                  <i class="fas fa-chevron-right text-xs"></i>
-                </button>
-                            </div>
-                            <!-- Day Names -->
-                            <div class="grid grid-cols-7 text-center text-[10px] font-bold text-slate-400 uppercase mb-3">
-                                <div *ngFor="let d of dayNames">{{ d }}</div>
-                            </div>
-                            <!-- Days Grid -->
-                            <div class="grid grid-cols-7 text-center gap-0.5">
-                                <div *ngFor="let day of calendarDays" (click)="selectDay(day)" [ngClass]="{
-                    'bg-blue-600 text-white ring-4 ring-blue-50 shadow': day.selected,
-                    'text-slate-300': day.other,
-                    'border border-blue-500 text-blue-600': day.isToday && !day.selected,
-                    'hover:bg-blue-50 hover:text-blue-600 cursor-pointer': !day.other
-                  }" class="text-xs font-semibold p-2 rounded-full transition-colors aspect-square flex items-center justify-center">
-                                    {{ day.number }}
-                                </div>
-                            </div>
-                            <!-- Calendar Footer -->
-                            <div class="flex gap-2 justify-end mt-4">
-                                <button (click)="goToToday()" class="text-xs px-4 py-2 border border-slate-200 rounded-lg text-slate-500 hover:bg-slate-50 transition-colors">Today</button>
-                                <button class="text-xs px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Confirm</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Available Times -->
-                    <div class="pt-4 border-t border-slate-50 space-y-3">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-sm font-bold text-slate-900">Available Times</h3>
-                            <span class="text-sm font-semibold text-blue-600">{{ selectedDateLabel }}</span>
-                        </div>
-                        <div class="flex flex-wrap gap-2">
-                            <button *ngFor="let slot of timeSlots" (click)="!slot.disabled && selectTime(slot.time)" [disabled]="slot.disabled" [ngClass]="{
-                  'bg-blue-50 border-blue-600 text-blue-600 ring-2 ring-blue-100': selectedTime === slot.time,
-                  'opacity-40 cursor-not-allowed bg-slate-50': slot.disabled,
-                  'hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50': !slot.disabled
-                }" class="px-4 py-2.5 border border-slate-100 rounded-xl text-xs font-bold text-slate-600 transition-all">
-                {{ slot.time }}
-              </button>
-                        </div>
-                    </div>
-
-                    <!-- Additional Details -->
-                    <div class="pt-4 border-t border-slate-50 space-y-4">
-                        <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fas fa-file-alt text-blue-500 text-xs"></i> Additional Details
-                        </h2>
-                        <div class="space-y-1">
-                            <label class="text-xs font-semibold text-slate-600">Notes (Optional)</label>
-                            <textarea rows="4" [(ngModel)]="notes" name="notes" placeholder="Write any details or symptoms..." class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-100 text-sm resize-none transition-all"></textarea>
-                        </div>
-                        <div class="border-2 border-dashed border-slate-200 bg-slate-50 rounded-2xl p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all group">
-                            <i class="fas fa-cloud-upload-alt text-2xl text-slate-300 mb-2 group-hover:text-blue-500 transition-colors block"></i>
-                            <p class="text-xs font-bold text-slate-600">Click or drag files to upload</p>
-                            <span class="text-[10px] text-slate-400 mt-1 block">PDF, JPG, PNG (Max 2MB)</span>
-                        </div>
-                    </div>
-
-                    <!-- Next Button -->
-                    <div class="flex justify-end pt-4 border-t border-slate-50">
-                        <button (click)="nextStep()" class="px-8 py-3 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all active:scale-95 flex items-center gap-2">
-              Next Step
-              <i class="fas fa-chevron-right text-xs"></i>
-            </button>
-                    </div>
-
+            <div class="flex-1 h-[2px] bg-gray-200 mx-3 mb-6"></div>
+            <div class="flex flex-col items-center gap-2 relative z-10">
+                <div [class]="isStepActive(3) ? 'border-blue-600 text-blue-600' : 'border-gray-200 text-gray-400'" class="w-10 h-10 rounded-full bg-white border-2 flex items-center justify-center font-semibold transition-all">
+                    <span>3</span>
                 </div>
-
-                <!-- Doctor Aside -->
-                <aside class="space-y-4">
-                    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 text-center space-y-4">
-                        <img src="https://i.pravatar.cc/150?u=dr_sami" class="w-20 h-20 rounded-full mx-auto border-4 border-slate-50 shadow-sm object-cover" alt="Doctor">
-                        <div>
-                            <h3 class="text-base font-black text-slate-900">Dr. Sami Amin</h3>
-                            <span class="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full inline-block mt-2">
-                Specialist Consultant
-              </span>
-                        </div>
-                        <p class="text-xs text-slate-500 leading-relaxed text-left">
-                            Specialist with 15+ years of experience in diagnosing and treating chronic diseases and providing personalized patient care.
-                        </p>
-                        <button class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-black transition-all">
-              View Full Profile
-            </button>
-                    </div>
-                </aside>
-
+                <div class="text-xs font-medium text-gray-400">Confirm</div>
             </div>
         </div>
-    </main>
-</div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 items-start">
+            <div class="space-y-6">
+
+                <!-- Consultation Type -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+                    <label class="block text-base font-bold mb-5">Consultation type</label>
+                    <div *ngFor="let opt of consultOptions" (click)="selectedConsultType.set(opt.id)" [class.border-blue-600]="selectedConsultType() === opt.id" [class.bg-blue-50]="selectedConsultType() === opt.id" class="flex justify-between items-center p-4 border-2 border-gray-100 rounded-xl mb-3 cursor-pointer hover:border-blue-600 hover:bg-blue-50 transition-all">
+                        <div>
+                            <div class="font-bold text-slate-800">{{ opt.label }}</div>
+                            <div class="text-xs text-slate-500">Session duration: {{ opt.duration }}</div>
+                        </div>
+                        <div class="text-xl font-extrabold text-blue-600">{{ opt.price }} <span class="text-xs">EGP</span></div>
+                    </div>
+                </div>
+
+                <!-- Calendar -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+                    <label class="block text-base font-bold mb-5">Appointment date</label>
+                    <div class="select-none">
+                        <div class="flex justify-between items-center mb-5">
+                            <button class="p-2 border border-gray-200 rounded-lg hover:bg-gray-50" (click)="prevMonth()">←</button>
+                            <div class="font-bold text-lg">{{ calMonthTitle() }}</div>
+                            <button class="p-2 border border-gray-200 rounded-lg hover:bg-gray-50" (click)="nextMonth()">→</button>
+                        </div>
+                        <div class="grid grid-cols-7 gap-2 text-center">
+                            <div *ngFor="let d of DAY_NAMES" class="text-xs text-gray-400 font-bold pb-2">{{ d }}</div>
+                            <button *ngFor="let cell of calendarCells()" (click)="selectDay(cell.day, cell.state)" [disabled]="cell.state === 'disabled' || cell.state === 'empty'" [ngClass]="{
+                                        'bg-blue-600 text-white shadow-md': cell.state === 'selected',
+                                        'text-blue-600 font-bold underline': cell.state === 'today',
+                                        'text-gray-200 cursor-not-allowed': cell.state === 'disabled',
+                                        'hover:bg-blue-50 hover:text-blue-600': cell.state !== 'disabled' && cell.state !== 'selected'
+                                    }" class="aspect-square flex items-center justify-center rounded-xl transition-all font-medium">
+                                {{ cell.day }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Time Slots -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-5">
+                        <span class="text-base font-bold">Available time slots</span>
+                        <span class="text-sm text-blue-600 font-medium">{{ selectedDateLabel() }}</span>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                        <button *ngFor="let slot of timeSlots" (click)="selectSlot(slot)" [disabled]="slot.disabled" [class.bg-blue-600]="selectedSlot() === slot.time" [class.text-white]="selectedSlot() === slot.time" [class.border-blue-600]="selectedSlot() === slot.time" class="p-3 border border-gray-200 rounded-xl font-semibold transition-all disabled:bg-slate-50 disabled:text-slate-300 disabled:border-dashed hover:border-blue-600 hover:text-blue-600">
+                            {{ slot.time }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+                    <label class="block text-base font-bold mb-5">Additional details</label>
+                    <textarea class="w-full min-h-[120px] p-4 border border-gray-200 rounded-xl mb-4 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="Describe symptoms..." [ngModel]="notes()" (ngModelChange)="notes.set($event)"></textarea>
+                    <div (click)="triggerFileInput()" class="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center text-gray-400 cursor-pointer hover:border-blue-600 hover:bg-blue-50 transition-all">
+                        <p>Click to upload or drag & drop</p>
+                        <input #fileInput type="file" hidden (change)="onFileSelected($event)" />
+                    </div>
+                    <div class="mt-3 p-3 bg-slate-100 rounded-lg flex justify-between items-center text-sm" *ngIf="attachedFileName()">
+                        <span>📎 {{ attachedFileName() }}</span>
+                        <button (click)="removeFile()" class="text-red-500 font-bold">✕</button>
+                    </div>
+                </div>
+
+                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl text-lg font-bold shadow-lg shadow-blue-200 transition-transform active:scale-[0.98]" (click)="nextStep()">
+                    Next step
+                </button>
+            </div>
+
+            <!-- ── Doctor Card (dynamic) ── -->
+            <aside class="lg:sticky lg:top-10 bg-gradient-to-br from-blue-600 to-blue-800 text-white p-8 rounded-[32px] shadow-xl">
+                <!-- صورة + اسم -->
+                <div class="flex items-center gap-4 mb-5">
+                    <img [src]="doctorAvatar" [alt]="doctorName" class="w-16 h-16 rounded-2xl object-cover border-2 border-white/30">
+                    <div>
+                        <div class="text-xl font-bold">Dr. {{ doctorName }}</div>
+                        <div class="text-blue-100 text-xs uppercase tracking-wider font-semibold mt-0.5">
+                            {{ doctorSpecialty }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="h-px bg-white/20 mb-5"></div>
+
+                <!-- Bio -->
+                <p class="text-blue-50 leading-relaxed opacity-90 italic text-sm mb-5" *ngIf="doctorBio">
+                    "{{ doctorBio }}"
+                </p>
+
+                <!-- Details -->
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 text-sm bg-white/10 p-3 rounded-xl" *ngIf="doctorFee">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Consultation Fee: <strong>{{ doctorFee }} EGP</strong></span>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm bg-white/10 p-3 rounded-xl" *ngIf="doctorExperience">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Experience: <strong>{{ doctorExperience }} years</strong></span>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm bg-white/10 p-3 rounded-xl" *ngIf="doctorAvailableDays.length > 0">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Available: <strong>{{ doctorAvailableDays.join(', ') }}</strong></span>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm bg-white/10 p-3 rounded-xl">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Professional Care</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm bg-white/10 p-3 rounded-xl">
+                        <i class="fas fa-clock"></i>
+                        <span>On-time Appointments</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</main>

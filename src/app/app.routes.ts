@@ -17,6 +17,8 @@ import { ProfileComponent } from './core/components/auth/profile/profile.compone
 import { Signup2Component } from './core/components/auth/signup2/signup2.component';
 import { BookingComponent } from './core/components/auth/booking/booking.component';
 import { PatientCardsComponent } from './core/components/auth/patient-cards/patient-cards.component';
+import { ProfileDComponent } from './core/components/auth/profile-d/profile-d.component';
+import { DoctorsFollowRequestComponent } from './core/components/auth/doctors-follow-request/doctors-follow-request.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -28,15 +30,17 @@ export const routes: Routes = [
   { path: 'welcome1', component: Welcome1Component, canActivate: [AuthGuard]  },
   { path: 'dashboard-p', component: DashboardPComponent, canActivate: [AuthGuard] },
   { path: 'add-new-medication', component: AddNewMedicationComponent, canActivate: [AuthGuard]  },
-  { path: 'doctor-cards', component: DoctorCardsComponent, canActivate: [AuthGuard]  },
+  { path: 'doctor-cards', component: DoctorCardsComponent },
   { path: 'chat', component: ChatComponent, canActivate: [AuthGuard]  },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }, 
   { path: 'contact', component: ContactComponent },
   {path: 'chat', component: ChatComponent, canActivate: [AuthGuard]  },
   {path: 'myprofile', component: ProfileComponent, canActivate: [AuthGuard]  },
     {path:'signup2', component: Signup2Component},
-    {path:'booking', component: BookingComponent, canActivate: [AuthGuard] },
+    {path:'booking/:id', component: BookingComponent, canActivate: [AuthGuard] },
     {path:'patient-cards', component: PatientCardsComponent, canActivate: [AuthGuard] },
+    {path:'profile-d/:id', component: ProfileDComponent },
+    {path:'doctors-follow-request', component: DoctorsFollowRequestComponent },
   { path: '**', redirectTo: '/home' },
 ];
 
