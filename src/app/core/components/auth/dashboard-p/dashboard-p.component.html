@@ -150,57 +150,51 @@
                 </div>
             </div>
 
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-black text-xl text-[#1A2D51] tracking-tight">Today's Medication</h3>
-                <span class="bg-blue-50 text-blue-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Next Dose: 09:00 AM</span>
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-8">
+                <div class="bg-white p-6 md:p-8 rounded-[30px] md:rounded-[40px] shadow-sm border border-white">
+                    <h3 class="font-bold text-lg md:text-xl mb-6">Today's Medication</h3>
+                    <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-3xl mb-6 border border-slate-100">
+                        <div class="bg-blue-100 p-3 md:p-4 rounded-2xl text-blue-600">
+                            <img src="c49002412c45c0d3237e5878fd78c0b8.png.webp">
 
-            <div class="flex items-center gap-5 p-6 bg-[#F9FAFB] rounded-[30px] border border-gray-100 mb-8">
-                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-gray-50">
-                    <i class="fa-solid fa-pills text-3xl text-blue-500"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-800 text-base md:text-lg">Donepezil</p>
+                            <p class="text-gray-400 text-sm">10mg / 1 Pill</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 md:gap-4">
+                        <button (click)="onTakeMedication()" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 md:py-4 rounded-2xl font-bold text-sm md:text-base shadow-lg shadow-green-100 transition-all active:scale-95">✔ Took it</button>
+                        <button (click)="remindLater()" class="flex-1 bg-amber-400 hover:bg-amber-500 text-white py-3 md:py-4 rounded-2xl font-bold text-sm md:text-base shadow-lg shadow-amber-100 transition-all active:scale-95">Remind Later</button>
+                    </div>
                 </div>
-                <div>
-                    <p class="font-black text-slate-800 text-lg">Donepezil</p>
-                    <p class="text-gray-400 font-bold text-sm">10mg • 1 Pill Daily</p>
-                </div>
-            </div>
-        </div>
 
-        <div class="flex gap-4">
-            <button (click)="onTakeMedication()" class="flex-1 bg-[#2D5BFF] hover:bg-[#1A4BFF] text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-100 transition-all active:scale-95 flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-check-double"></i> Took it
-                        </button>
-            <button (click)="remindLater()" class="flex-1 bg-white border-2 border-gray-100 text-gray-400 py-4 rounded-2xl font-bold hover:bg-gray-50 transition-all">
-                            Remind Later
-                        </button>
-        </div>
-    </div>
-
-    <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-50 flex flex-col items-center">
-        <h3 class="font-black text-xl text-[#1A2D51] self-start mb-6">Weekly Adherence</h3>
-
-        <div class="relative w-48 h-48 flex items-center justify-center">
-            <svg class="w-full h-full transform -rotate-90">
-                            <circle cx="50%" cy="50%" r="40%" stroke="#F1F5F9" stroke-width="8" fill="transparent" />
-                            <circle cx="50%" cy="50%" r="40%" stroke="#2D5BFF" stroke-width="10" fill="transparent"
-                                [style.stroke-dasharray]="'251.3'" 
-                                [style.stroke-dashoffset]="251.3 * (1 - adherence / 100)"
-                                stroke-linecap="round" class="transition-all duration-1000 ease-out" />
+                <div class="bg-white p-6 md:p-8 rounded-[30px] md:rounded-[40px] shadow-sm flex flex-col items-center border border-white">
+                    <h3 class="font-bold text-lg md:text-xl self-start mb-4">Medication Scheduler</h3>
+                    <div class="relative w-40 h-40 md:w-48 md:h-48 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="50%" cy="50%" r="35%" stroke="currentColor" stroke-width="8" fill="transparent" class="text-slate-100" />
+                            <circle cx="50%" cy="50%" r="35%" stroke="currentColor" stroke-width="10" fill="transparent"
+                                [style.stroke-dasharray]="'calc(2 * 3.14159 * 35%)'"
+                                [style.stroke-dashoffset]="'calc(2 * 3.14159 * 35% * (1 - ' + adherence / 100 + '))'"
+                                stroke-linecap="round" class="text-blue-500 transition-all duration-1000" />
                         </svg>
-            <div class="absolute text-center">
-                <span class="text-4xl font-black text-[#1A2D51]">{{ adherence }}%</span>
-                <p class="text-[10px] text-blue-400 uppercase font-black tracking-widest mt-1">Goal Reached</p>
-            </div>
-        </div>
-
-        <div class="flex gap-3 mt-8 w-full justify-center">
-            <div *ngFor="let d of week" (click)="toggleDay(d)" class="text-center cursor-pointer group">
-                <div class="w-10 h-10 rounded-2xl flex items-center justify-center mb-2 transition-all font-black text-xs" [ngClass]="d.taken ? 'bg-[#2D5BFF] text-white shadow-lg shadow-blue-200' : 'bg-gray-50 text-gray-400 hover:bg-gray-100'">
-                    {{ d.day }}
+                        <div class="absolute text-center">
+                            <span class="text-3xl md:text-4xl font-black text-blue-600">{{ adherence }}%</span>
+                            <p class="text-[8px] md:text-[10px] text-gray-400 uppercase font-bold">Adherence</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 mt-6 overflow-x-auto w-full justify-center pb-2 scrollbar-hide">
+                        <div *ngFor="let d of week" (click)="toggleDay(d)" class="text-center cursor-pointer flex-shrink-0 group">
+                            <div class="w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center mb-1 transition-all" [ngClass]="d.taken ? 'bg-blue-500 text-white shadow-md' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'">
+                                <span class="text-xs font-bold">{{ d.day }}</span>
+                            </div>
+                            <div class="h-1 w-1 mx-auto rounded-full transition-all" [ngClass]="d.taken ? 'bg-blue-500' : 'bg-transparent'"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="h-1.5 w-1.5 mx-auto rounded-full transition-all" [ngClass]="d.taken ? 'bg-[#2D5BFF]' : 'bg-transparent'"></div>
             </div>
+
         </div>
     </div>
-
 </div>
