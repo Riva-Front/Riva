@@ -121,16 +121,20 @@ export class DoctorsFollowRequestComponent implements OnInit {
     this.isLoading = true;
     const token    = this.authService.getToken();
 
-    console.log(`[FollowRequest] POST → /api/doctors/${this.doctorId}/follow-request`);
+    // ✅ الـ route الصح من api.php:
+    // POST /api/doctors/{doctor}/follow-request  (role:patient middleware)
+    // {doctor} = doctor profile ID (مش user ID)
+    const doctorProfileId = this.doctorId; // id من الـ doctor-cards API
+    console.log(`[FollowRequest] POST → /api/doctors/${doctorProfileId}/follow-request`);
 
-    fetch(`http://localhost:8000/api/doctors/${this.doctorId}/follow-request`, {
+    fetch(`http://localhost:8000/api/doctors/${doctorProfileId}/follow-request`, {
       method: 'POST',
       headers: {
         Authorization : `Bearer ${token}`,
         Accept        : 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ payment_method: 'card' }),
+      body: JSON.stringify({}),
     })
       .then(async res => {
         const text = await res.text();

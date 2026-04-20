@@ -99,9 +99,10 @@ export class ProfileComponent implements OnInit {
   private setSidebar(): void {   if (this.isDoctor) {
       this.sidebarLinks = [
         { icon: 'fas fa-home', route: '/dashboard' },
-        { icon: 'fa-solid fa-circle-user', route: '/profile' },
-        { icon: 'fa-solid fa-phone', route: '/contact' },
+
         { icon: 'fa-brands fa-rocketchat', route: '/chat' },
+                { icon: 'fa-solid fa-circle-user', route: '/profile' },
+        { icon: 'fa-solid fa-phone', route: '/contact' },
        
       ];
     } else {

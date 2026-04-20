@@ -19,25 +19,16 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild("chart") chart!: ChartComponent;
 
-  // ── Doctor Info ───────────────────────────────────────────
-  currentDoctor = {
-    name: '',
-    status: 'Online',
-    avatar: ''
-  };
+  currentDoctor = { name: '', status: 'Online', avatar: '' };
 
-  // ── Follow Requests (pending) ─────────────────────────────
   pendingRequests: any[] = [];
-  isLoadingRequests = true;
+  patients: any[]        = [];
 
-  // ── Accepted Patients (followers) ────────────────────────
-  patients: any[] = [];
+  isLoadingRequests = true;
   isLoadingPatients = true;
 
-  // ── Stats ─────────────────────────────────────────────────
   stats = { total: 0, highRisk: 0, pdfs: 8, adherence: 92 };
 
-  // ── Charts ────────────────────────────────────────────────
   public pieOptions = {
     series: [45, 25, 15, 15] as ApexNonAxisChartSeries,
     chart: { type: "donut" as const, height: 280 } as ApexChart,
@@ -59,11 +50,9 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDoctorProfile();
-    this.loadPendingRequests();
-    this.loadAcceptedPatients();
+    this.loadAllPatients();
   }
 
-  // ── Load Doctor Profile ───────────────────────────────────
   loadDoctorProfile(): void {
     const token = this.authService.getToken();
     this.http.get<any>('http://localhost:8000/api/profile', {
@@ -79,163 +68,139 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // ── Load Pending Follow Requests ──────────────────────────
-  loadPendingRequests(): void {
-    const token    = this.authService.getToken();
-    const doctorId = this.getDoctorId();
-    if (!doctorId) { this.isLoadingRequests = false; return; }
-
-    this.http.get<any>(`http://localhost:8000/api/doctor-relationships/${doctorId}/pending`, {
-      headers: { Authorization: `Bearer ${token}` }
-    }).subscribe({
-      next: (res) => {
-        const list = res.data || res.requests || res || [];
-        this.pendingRequests = list.map((r: any) => ({
-          id:          r.id,
-          patientId:   r.patient_id || r.user_id || r.id,
-          name:        r.patient_name
-            || `${r.patient?.first_name || r.user?.first_name || ''} ${r.patient?.last_name || r.user?.last_name || ''}`.trim()
-            || 'Patient',
-          avatar:      r.patient?.profile_image || r.user?.profile_image
-            || `https://ui-avatars.com/api/?name=${encodeURIComponent(r.patient_name || 'P')}&background=F0F4FF&color=2D5BFF`,
-          condition:   r.medical_history || r.condition || '—',
-          requestedAt: r.created_at
-            ? new Date(r.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short' })
-            : '',
-          isProcessing: false,
-        }));
-        this.isLoadingRequests = false;
-        console.log('[Dashboard] Pending requests:', this.pendingRequests);
-      },
-      error: (err) => {
-        console.warn('[Dashboard] No pending endpoint, trying relationships:', err.status);
-        // fallback: /api/doctor-relationships/{id}
-        this.loadFromRelationships(doctorId, 'pending');
-      }
-    });
-  }
-
-  // ── Load Accepted Patients ────────────────────────────────
-  loadAcceptedPatients(): void {
-    const token    = this.authService.getToken();
-    const doctorId = this.getDoctorId();
-    if (!doctorId) { this.isLoadingPatients = false; return; }
-
-    this.http.get<any>(`http://localhost:8000/api/doctor-relationships/${doctorId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    }).subscribe({
-      next: (res) => {
-        const list = res.data || res.patients || res || [];
-        const accepted = Array.isArray(list)
-          ? list.filter((r: any) => r.status === 'accepted' || r.status === 'approved' || !r.status)
-          : [];
-
-        this.patients = accepted.map((r: any) => ({
-          id:        r.patient_id || r.user_id || r.id,
-          name:      r.patient_name
-            || `${r.patient?.first_name || r.user?.first_name || ''} ${r.patient?.last_name || r.user?.last_name || ''}`.trim()
-            || 'Patient',
-          img:       r.patient?.profile_image || r.user?.profile_image
-            || `https://ui-avatars.com/api/?name=${encodeURIComponent(r.patient_name || 'P')}&background=F0F4FF&color=2D5BFF`,
-          condition: r.medical_history || r.condition || 'N/A',
-          status:    r.health_status || 'Stable',
-          room:      r.room || '—',
-        }));
-
-        this.stats.total = this.patients.length;
-        this.isLoadingPatients = false;
-        console.log('[Dashboard] Accepted patients:', this.patients);
-      },
-      error: (err) => {
-        console.error('[Dashboard] Failed to load patients:', err);
-        this.isLoadingPatients = false;
-      }
-    });
-  }
-
-  private loadFromRelationships(doctorId: number, status: string): void {
+  // ✅ GET /api/doctor/patients — يجيب الكل ويقسمهم
+  loadAllPatients(): void {
     const token = this.authService.getToken();
-    this.http.get<any>(`http://localhost:8000/api/doctor-relationships/${doctorId}`, {
+
+    this.http.get<any>('http://localhost:8000/api/doctor/patients', {
       headers: { Authorization: `Bearer ${token}` }
     }).subscribe({
       next: (res) => {
-        const list = res.data || res || [];
-        const filtered = Array.isArray(list)
-          ? list.filter((r: any) => r.status === status || r.status === 'pending')
-          : [];
-        this.pendingRequests = filtered.map((r: any) => ({
-          id:          r.id,
-          patientId:   r.patient_id || r.user_id,
-          name:        `${r.patient?.first_name || r.user?.first_name || ''} ${r.patient?.last_name || r.user?.last_name || ''}`.trim() || 'Patient',
-          avatar:      r.patient?.profile_image || `https://ui-avatars.com/api/?name=P&background=F0F4FF&color=2D5BFF`,
-          condition:   r.medical_history || '—',
-          requestedAt: r.created_at ? new Date(r.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short' }) : '',
-          isProcessing: false,
-        }));
+        console.log('[Dashboard] raw response:', JSON.stringify(res, null, 2));
+
+        // الـ API ممكن يرجع array مباشرة أو object فيه data
+        const list = Array.isArray(res)
+          ? res
+          : (res.data || res.patients || res.relationships || []);
+
+        const arr = Array.isArray(list) ? list : [];
+
+        console.log('[Dashboard] total records:', arr.length);
+        console.log('[Dashboard] statuses:', arr.map((r: any) => r.status));
+
+        // pending → في انتظار الموافقة
+        this.pendingRequests = arr
+          .filter((r: any) => r.status === 'pending')
+          .map((r: any) => this.mapToRequest(r));
+
+        // ✅ الـ backend بيحفظ 'active' لما يقبل (مش 'accepted')
+        // pending → لسه في الانتظار
+        // active  → اتقبل
+        // rejected / ended → مرفوض أو منتهي
+        this.patients = arr
+          .filter((r: any) => r.status === 'active')
+          .map((r: any) => this.mapToPatient(r));
+
+        this.stats.total       = this.patients.length;
         this.isLoadingRequests = false;
+        this.isLoadingPatients = false;
+
+        console.log('[Dashboard] pending:', this.pendingRequests.length, '| accepted:', this.patients.length);
       },
-      error: () => { this.isLoadingRequests = false; }
+      error: (err) => {
+        console.error('[Dashboard] failed:', err.status, err.error);
+        this.isLoadingRequests = false;
+        this.isLoadingPatients = false;
+      }
     });
   }
 
-  // ── Accept / Reject ───────────────────────────────────────
+  // ✅ POST /api/doctor-relationships/{relationship}/accept
   acceptRequest(req: any): void {
     req.isProcessing = true;
-    const token      = this.authService.getToken();
-    const doctorId   = this.getDoctorId();
+    const token = this.authService.getToken();
 
     this.http.post<any>(
-      `http://localhost:8000/api/doctor-relationships/${doctorId}/accept`,
-      { patient_id: req.patientId, relationship_id: req.id },
+      `http://localhost:8000/api/doctor-relationships/${req.id}/accept`,
+      {},
       { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
     ).subscribe({
-      next: () => {
+      next: (res) => {
+        console.log('[Dashboard] Accepted:', req.name, res);
         this.pendingRequests = this.pendingRequests.filter(r => r.id !== req.id);
-        this.loadAcceptedPatients();
-        console.log('[Dashboard] Accepted:', req.name);
+        this.loadAllPatients();
       },
       error: (err) => {
         req.isProcessing = false;
-        console.error('[Dashboard] Accept failed:', err);
+        console.error('[Dashboard] Accept failed:', err.status, err.error);
       }
     });
   }
 
+  // ✅ POST /api/doctor-relationships/{relationship}/reject
   rejectRequest(req: any): void {
     req.isProcessing = true;
-    const token      = this.authService.getToken();
-    const doctorId   = this.getDoctorId();
+    const token = this.authService.getToken();
 
     this.http.post<any>(
-      `http://localhost:8000/api/doctor-relationships/${doctorId}/reject`,
-      { patient_id: req.patientId, relationship_id: req.id },
+      `http://localhost:8000/api/doctor-relationships/${req.id}/reject`,
+      {},
       { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
     ).subscribe({
-      next: () => {
+      next: (res) => {
+        console.log('[Dashboard] Rejected:', req.name, res);
         this.pendingRequests = this.pendingRequests.filter(r => r.id !== req.id);
-        console.log('[Dashboard] Rejected:', req.name);
       },
       error: (err) => {
         req.isProcessing = false;
-        console.error('[Dashboard] Reject failed:', err);
+        console.error('[Dashboard] Reject failed:', err.status, err.error);
       }
     });
   }
 
-  // ── Helper ────────────────────────────────────────────────
-  private getDoctorId(): number | null {
-    try {
-      for (const key of ['user','userData','authUser','currentUser']) {
-        const str = localStorage.getItem(key);
-        if (str) {
-          const obj = JSON.parse(str);
-          if (obj?.role === 'doctor' || obj?.type === 'doctor') return obj.id || obj.doctor_id || null;
-        }
-      }
-      // fallback: من الـ profile response المحفوظ
-      const profile = localStorage.getItem('doctorProfile');
-      if (profile) return JSON.parse(profile)?.id || null;
-    } catch {}
-    return null;
+  private mapToRequest(r: any): any {
+    // الـ API بيرجع: relationship → patient → user
+    const patientModel = r.patient || {};
+    const userModel    = patientModel.user || r.user || {};
+
+    console.log('[mapToRequest] r:', JSON.stringify(r, null, 2));
+
+    const firstName = userModel.first_name || patientModel.first_name || '';
+    const lastName  = userModel.last_name  || patientModel.last_name  || '';
+    const name      = `${firstName} ${lastName}`.trim() || 'Patient';
+    const avatar    = userModel.profile_image || patientModel.profile_image
+      || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=F0F4FF&color=2D5BFF`;
+
+    return {
+      id:           r.id,
+      patientId:    r.patient_id || patientModel.id,
+      name,
+      avatar,
+      condition:    r.notes || patientModel.medical_history || '—',
+      requestedAt:  r.created_at
+        ? new Date(r.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short' })
+        : '',
+      isProcessing: false,
+    };
+  }
+
+  private mapToPatient(r: any): any {
+    const patientModel = r.patient || {};
+    const userModel    = patientModel.user || r.user || {};
+
+    const firstName = userModel.first_name || patientModel.first_name || '';
+    const lastName  = userModel.last_name  || patientModel.last_name  || '';
+    const name      = `${firstName} ${lastName}`.trim() || 'Patient';
+    const avatar    = userModel.profile_image || patientModel.profile_image
+      || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=F0F4FF&color=2D5BFF`;
+
+    return {
+      id:        r.patient_id || patientModel.id,
+      name,
+      img:       avatar,
+      condition: r.notes || patientModel.medical_history || 'N/A',
+      status:    'Stable',
+      room:      '—',
+    };
   }
 }
